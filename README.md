@@ -91,6 +91,9 @@ Hosting (optional): Node.js-compatible platforms (e.g., Render, Railway)
 
 
 ### other roles are also but not mentinoed in sccreens here
+## ERD 
+![Final_ERD](https://github.com/user-attachments/assets/4d444064-179d-4fae-9f5b-92d4e438a29a)
+
 
 # 📁 Folder Structure
 
