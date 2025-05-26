@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Judge Profile - NASCON Event Management System</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/judge">
+                <i class="fas fa-gavel me-2"></i>NASCON Judge Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/judge">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/judge/events">My Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/judge/scoring">Scoring</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i><span id="username">Judge</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item active" href="/judge/profile"><i class="fas fa-id-card me-2"></i>Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- main Content -->
+    <div class="container py-4 page-content">
+        <h1 class="mb-4"><i class="fas fa-user-circle me-2"></i>Judge Profile</h1>
+        
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <div class="bg-primary text-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; font-size: 40px;">
+                                <span id="profileInitials">J</span>
+                            </div>
+                        </div>
+                        <h4 id="judgeName" class="card-title mb-0">Judge Name</h4>
+                        <p id="judgeEmail" class="text-muted">judge@example.com</p>
+                        <p class="mb-2"><i class="fas fa-map-marker-alt me-2"></i><span id="judgeCity">City</span></p>
+                        <div id="judgePhones" class="mb-3">
+                            <p class="mb-1"><i class="fas fa-phone me-2"></i>Loading phone numbers...</p>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-dark">
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-outline-light" disabled>
+                                <i class="fas fa-edit me-2"></i>Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+              
+            </div>
+            
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Professional Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6>Expertise</h6>
+                            <p id="judgeExpertise" class="mb-0">Loading expertise...</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h6>Years of Experience</h6>
+                            <p id="judgeExperienceDetail" class="mb-0">Loading experience...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Assigned Events</h5>
+                        <a href="/judge/events" class="btn btn-sm btn-outline-secondary">View All</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Event Name</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentEventsTable">
+                                    <tr>
+                                        <td colspan="3" class="text-center">Loading events...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="small mb-0">&copy; 2023 NASCON Event Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/js/main.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                await loadProfile();
+                
+                await loadRecentEvents();
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                alert('Failed to load the profile. Please try again later.');
+            }
+        });
+        
+        async function loadProfile() {
+            try {
+                const response = await fetch('/api/judge/profile');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile data');
+                }
+                
+                const profile = await response.json();
+                
+                document.getElementById('username').textContent = `${profile.FirstName} ${profile.LastName}`;
+                document.getElementById('judgeName').textContent = `${profile.FirstName} ${profile.MiddleName ? profile.MiddleName + ' ' : ''}${profile.LastName}`;
+                document.getElementById('judgeEmail').textContent = profile.Email || 'No email provided';
+                document.getElementById('judgeCity').textContent = profile.city || 'Not specified';
+                
+                const initials = `${profile.FirstName.charAt(0)}${profile.LastName.charAt(0)}`;
+                document.getElementById('profileInitials').textContent = initials;
+                
+                document.getElementById('judgeExpertise').textContent = profile.Expertise || 'Not specified';
+                document.getElementById('judgeExperienceDetail').textContent = profile.YearsExperience ? `${profile.YearsExperience} years` : 'Not specified';
+                document.getElementById('experienceYears').textContent = profile.YearsExperience ? `${profile.YearsExperience} years` : 'N/A';
+                
+                document.getElementById('assignedEventsCount').textContent = profile.assignedEventsCount || '0';
+                
+                const phonesContainer = document.getElementById('judgePhones');
+                if (profile.phoneNumbers && profile.phoneNumbers.length > 0) {
+                    phonesContainer.innerHTML = '';
+                    profile.phoneNumbers.forEach(phone => {
+                        phonesContainer.innerHTML += `<p class="mb-1"><i class="fas fa-phone me-2"></i>${phone}</p>`;
+                    });
+                } else {
+                    phonesContainer.innerHTML = '<p class="mb-1"><i class="fas fa-phone me-2"></i>No phone numbers provided</p>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                alert('Failed to load profile information. Please try again later.');
+            }
+        }
+        
+        async function loadRecentEvents() {
+            try {
+                const response = await fetch('/api/judge/events');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch events');
+                }
+                
+                const data = await response.json();
+                
+                const allEvents = [];
+                if (data.upcoming) allEvents.push(...data.upcoming);
+                if (data.past) allEvents.push(...data.past);
+                
+                allEvents.sort((a, b) => new Date(b.EventDateTime) - new Date(a.EventDateTime));
+                const recentEvents = allEvents.slice(0, 5);
+                
+                const recentEventsTable = document.getElementById('recentEventsTable');
+                if (recentEvents.length > 0) {
+                    recentEventsTable.innerHTML = '';
+                    recentEvents.forEach(event => {
+                        const date = new Date(event.EventDateTime);
+                        const formattedDate = date.toLocaleDateString();
+                        const isPast = date < new Date();
+                        const isScored = event.ScoredCount > 0;
+                        
+                        let statusBadge = '';
+                        if (isPast && isScored) {
+                            statusBadge = '<span class="badge bg-success">Completed</span>';
+                        } else if (isPast) {
+                            statusBadge = '<span class="badge bg-danger">Pending Score</span>';
+                        } else {
+                            statusBadge = '<span class="badge bg-warning">Upcoming</span>';
+                        }
+                        
+                        recentEventsTable.innerHTML += `
+                            <tr>
+                                <td><a href="/judge/events/${event.EventID}">${event.EventName}</a></td>
+                                <td>${formattedDate}</td>
+                                <td>${statusBadge}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    recentEventsTable.innerHTML = '<tr><td colspan="3" class="text-center">No events assigned yet</td></tr>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading events:', error);
+                document.getElementById('recentEventsTable').innerHTML = 
+                    '<tr><td colspan="3" class="text-center text-danger">Failed to load events. Please try again later.</td></tr>';
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    fetch('/logout', {
+                        method: 'POST'
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/login';
+                        } else {
+                            alert('Logout failed. Please try again.');
+                        }
+                    }).catch(error => {
+                        console.error('Error during logout:', error);
+                        alert('An error occurred. Please try again.');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

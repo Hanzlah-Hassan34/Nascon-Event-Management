@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participant Dashboard - NASCON Event Management System</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-calendar-alt me-2"></i>NASCON Events
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/participant">Dashboard</a>
+                    </li>
+                </ul>
+                <div class="d-flex" id="userMenu">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- main Content -->
+    <div class="container py-4 page-content">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-info text-dark">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h2 class="mb-0">Participant Dashboard</h2>
+                                <p class="mb-0">Welcome, <span id="participantName">Participant</span></p>
+                            </div>
+                            <div class="ms-auto">
+                                <a href="/" class="btn btn-dark">
+                                    <i class="fas fa-search me-2"></i>Explore Events
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <!-- participant profile Card -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-4 mb-md-0">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h4 class="mb-0">Your Profile</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-user-circle fa-6x text-info mb-3"></i>
+                            <h5 class="mb-0" id="profileName">Loading...</h5>
+                            <p class="text-muted" id="profileEmail">loading@example.com</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                University
+                                <span class="badge bg-info text-dark" id="profileUniversity">Loading...</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Team
+                                <span class="badge bg-info text-dark" id="profileTeam">Loading...</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Events Registered
+                                <span class="badge bg-info text-dark" id="profileEventsCount">0</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                City
+                                <span class="badge bg-info text-dark" id="profileCity">Loading...</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-outline-info w-100" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                            <i class="fas fa-edit me-2"></i>Edit Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- upcoming Events Card -->
+            <div class="col-md-8">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h4 class="mb-0">Your Registered Events</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs mb-3" id="registeredEventsTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="true">Upcoming</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="past-tab" data-bs-toggle="tab" data-bs-target="#past" type="button" role="tab" aria-controls="past" aria-selected="false">Past Events</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="registeredEventsContent">
+                            <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+                                <div id="upcomingEventsContainer">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="spinner-border text-info" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="past" role="tabpanel" aria-labelledby="past-tab">
+                                <div id="pastEventsContainer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Explore Available Events</h4>
+                    <div class="input-group" style="max-width: 300px;">
+                        <input type="text" class="form-control" id="eventSearch" placeholder="Search events...">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="btn-group" role="group" aria-label="Event filter">
+                            <button type="button" class="btn btn-outline-info active" data-filter="all">All</button>
+                            <button type="button" class="btn btn-outline-info" data-filter="Tech Events">Tech</button>
+                            <button type="button" class="btn btn-outline-info" data-filter="Business Competitions">Business</button>
+                            <button type="button" class="btn btn-outline-info" data-filter="Gaming Tournaments">Gaming</button>
+                            <button type="button" class="btn btn-outline-info" data-filter="General Events">General</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="availableEventsContainer">
+                    <div class="col-12 text-center">
+                        <div class="spinner-border text-info" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- edit profile card -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProfileForm">
+                        <div class="mb-3">
+                            <label for="editFirstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="editFirstName" name="firstName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMiddleName" class="form-label">Middle Name (Optional)</label>
+                            <input type="text" class="form-control" id="editMiddleName" name="middleName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editLastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="editLastName" name="lastName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editCity" class="form-label">City</label>
+                            <input type="text" class="form-control" id="editCity" name="city" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPhoneNumber" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="editPhoneNumber" name="phoneNumber" pattern="[0-9]{11}" title="Please enter a valid 11-digit phone number">
+                            <small class="form-text text-muted">Format: 11 digits (e.g., 03001234567)</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveProfileBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- registration confirmation modal -->
+    <div class="modal fade" id="registerConfirmModal" tabindex="-1" aria-labelledby="registerConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerConfirmModalLabel">Confirm Registration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to register for <strong id="registerEventName"></strong>?</p>
+                    <p>Registration Fee: <span id="registerEventFee"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmRegisterBtn">Confirm Registration</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="small mb-0">&copy; 2023 NASCON Event Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/js/main.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script>
+        let currentProfile = null;
+        let registeredEvents = [];
+        let availableEvents = [];
+        let registerEventId = null;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const userResponse = await fetch('/getlastuser');
+                
+                if (!userResponse.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                
+                const userData = await userResponse.json();
+                
+                const roleResponse = await fetch('/getrole', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: userData.id })
+                });
+                
+                if (!roleResponse.ok) {
+                    throw new Error('Failed to fetch user role');
+                }
+                
+                const roleData = await roleResponse.json();
+                
+                const user = {
+                    ...userData,
+                    role: roleData.role
+                };
+                
+                if (!user) {
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                if (user.role !== 'participant') {
+                    showAlert('Access denied. You are not registered as a participant.');
+                    setTimeout(function() {
+                        window.location.href = '/';
+                    }, 2000);
+                    return;
+                }
+                
+                document.getElementById('userMenu').innerHTML = createUserMenu(user);
+                document.getElementById('participantName').textContent = user.name;
+                
+                await loadProfile();
+                await loadRegisteredEvents();
+                await loadAvailableEvents();
+                
+                setupEventFilters();
+                setupSearch();
+                setupProfileEdit();
+                setupRegistrationConfirmation();
+                setupLogoutButton();
+                
+                addAccommodationCard();
+                
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+                showAlert('Failed to load dashboard. Please try again later.');
+            }
+        });
+        
+        function createUserMenu(user) {
+            return `
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-1"></i> ${user.name}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/participant">Dashboard</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        function setupLogoutButton() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    fetch('/logout', {
+                        method: 'POST'
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/login';
+                        } else {
+                            alert('Logout failed. Please try again.');
+                        }
+                    }).catch(error => {
+                        console.error('Error during logout:', error);
+                        alert('An error occurred. Please try again.');
+                    });
+                });
+            }
+        }
+        
+        async function loadProfile() {
+            try {
+                const response = await fetch('/loadprofile');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile');
+                }
+                const profile = await response.json();
+                currentProfile = profile;
+                
+                document.getElementById('profileName').textContent = `${currentProfile.FirstName} ${currentProfile.LastName}`;
+                document.getElementById('profileEmail').textContent = currentProfile.Email;
+                document.getElementById('profileUniversity').textContent = currentProfile.University || 'Not specified';
+                document.getElementById('profileTeam').textContent = currentProfile.team ? currentProfile.team.TeamName : 'Not assigned';
+                document.getElementById('profileCity').textContent = currentProfile.city;
+                
+                document.getElementById('editFirstName').value = currentProfile.FirstName;
+                document.getElementById('editMiddleName').value = currentProfile.MiddleName || '';
+                document.getElementById('editLastName').value = currentProfile.LastName;
+                document.getElementById('editCity').value = currentProfile.city;
+                document.getElementById('editPhoneNumber').value = currentProfile.phoneNumbers && currentProfile.phoneNumbers.length > 0 ? 
+                    currentProfile.phoneNumbers[0] : '';
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showAlert('Failed to load profile information.');
+            }
+        }
+        
+        async function loadRegisteredEvents() {
+            try {
+                const response = await fetch('/api/events/registered/me');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch registered events');
+                }
+                const events = await response.json();
+                registeredEvents = events;
+                
+                document.getElementById('profileEventsCount').textContent = registeredEvents.length;
+                
+                const now = new Date();
+                const upcomingEvents = [];
+                const pastEvents = [];
+                
+                for (let i = 0; i < registeredEvents.length; i++) {
+                    if (new Date(registeredEvents[i].DateTime) >= now) {
+                        upcomingEvents.push(registeredEvents[i]);
+                    } else {
+                        pastEvents.push(registeredEvents[i]);
+                    }
+                }
+                
+                // Render upcoming events
+                renderRegisteredEvents(upcomingEvents, 'upcomingEventsContainer');
+                
+                // Render past events
+                renderRegisteredEvents(pastEvents, 'pastEventsContainer');
+            } catch (error) {
+                console.error('Error loading registered events:', error);
+                document.getElementById('upcomingEventsContainer').innerHTML = 
+                    '<div class="alert alert-danger">Failed to load your registered events.</div>';
+            }
+        }
+        
+        function renderRegisteredEvents(events, containerId) {
+            const container = document.getElementById(containerId);
+            
+            if (!events || events.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center p-4">
+                        <i class="fas fa-calendar-times fa-3x mb-3 text-muted"></i>
+                        <p class="mb-0">No events found.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '<div class="list-group">';
+            
+            for (let i = 0; i < events.length; i++) {
+                const event = events[i];
+                const eventDate = new Date(event.DateTime);
+                const isToday = isDateToday(eventDate);
+                
+                html += `
+                    <a href="/event/${event.EventID}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">${event.EventName}</h5>
+                            <small class="text-${isToday ? 'warning' : 'muted'}">
+                                ${isToday ? '<i class="fas fa-exclamation-circle me-1"></i>Today' : formatDate(event.DateTime)}
+                            </small>
+                        </div>
+                        <p class="mb-1">${event.Description ? event.Description.substring(0, 100) + '...' : 'No description available'}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small>
+                                <i class="fas fa-map-marker-alt me-1"></i>${event.VenueName || 'Venue TBD'}
+                            </small>
+                            <span class="badge ${getEventBadgeClass(event.Category)}">${event.Category}</span>
+                        </div>
+                    </a>
+                `;
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function isDateToday(date) {
+            const today = new Date();
+            return date.getDate() === today.getDate() &&
+                   date.getMonth() === today.getMonth() &&
+                   date.getFullYear() === today.getFullYear();
+        }
+        
+        async function loadAvailableEvents() {
+            try {
+                const response = await fetch('/api/events');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch events');
+                }
+                const allEvents = await response.json();
+                
+                const registeredEventIds = {};
+                for (let i = 0; i < registeredEvents.length; i++) {
+                    registeredEventIds[registeredEvents[i].EventID] = true;
+                }
+                
+                availableEvents = [];
+                for (let i = 0; i < allEvents.length; i++) {
+                    if (!registeredEventIds[allEvents[i].EventID]) {
+                        availableEvents.push(allEvents[i]);
+                    }
+                }
+                
+                renderAvailableEvents(availableEvents);
+            } catch (error) {
+                console.error('Error loading available events:', error);
+                document.getElementById('availableEventsContainer').innerHTML = 
+                    '<div class="col-12"><div class="alert alert-danger">Failed to load available events.</div></div>';
+            }
+        }
+        
+        function renderAvailableEvents(events) {
+            const container = document.getElementById('availableEventsContainer');
+            
+            if (!events || events.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12 text-center p-4">
+                        <i class="fas fa-calendar-times fa-3x mb-3 text-muted"></i>
+                        <p class="mb-0">No available events found.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            
+            for (let i = 0; i < events.length; i++) {
+                const event = events[i];
+                html += `
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <span class="badge ${getEventBadgeClass(event.Category)}">${event.Category}</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">${event.EventName}</h5>
+                                <p class="card-text">${event.Description ? event.Description.substring(0, 100) + '...' : 'No description available'}</p>
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar-alt me-1"></i> ${formatDate(event.DateTime)}
+                                    </small>
+                                </div>
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-map-marker-alt me-1"></i> ${event.VenueName || 'Venue TBD'}
+                                    </small>
+                                </div>
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-users me-1"></i> ${event.RegisteredParticipants || 0}/${event.MaxParticipants} participants
+                                    </small>
+                                </div>
+                                <div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-money-bill me-1"></i> ${formatCurrency(event.RegistrationFee)}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between">
+                                <a href="/event/${event.EventID}" class="btn btn-outline-info">View Details</a>
+                                <button class="btn btn-info register-btn" 
+                                    data-event-id="${event.EventID}"
+                                    data-event-name="${event.EventName}"
+                                    data-event-fee="${event.RegistrationFee}"
+                                    ${parseInt(event.RegisteredParticipants || 0) >= event.MaxParticipants ? 'disabled' : ''}>
+                                    ${parseInt(event.RegisteredParticipants || 0) >= event.MaxParticipants ? 'Full' : 'Register'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+            
+            const registerButtons = document.querySelectorAll('.register-btn');
+            for (let i = 0; i < registerButtons.length; i++) {
+                registerButtons[i].addEventListener('click', function() {
+                    const eventId = this.getAttribute('data-event-id');
+                    const eventName = this.getAttribute('data-event-name');
+                    const eventFee = this.getAttribute('data-event-fee');
+                    
+                    document.getElementById('registerEventName').textContent = eventName;
+                    document.getElementById('registerEventFee').textContent = formatCurrency(eventFee);
+                    registerEventId = eventId;
+                    
+                    const registerModal = new bootstrap.Modal(document.getElementById('registerConfirmModal'));
+                    registerModal.show();
+                });
+            }
+        }
+        
+        function setupEventFilters() {
+            const filterButtons = document.querySelectorAll('[data-filter]');
+            
+            for (let i = 0; i < filterButtons.length; i++) {
+                filterButtons[i].addEventListener('click', function() {
+                    for (let j = 0; j < filterButtons.length; j++) {
+                        filterButtons[j].classList.remove('active');
+                    }
+                    
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    
+                    if (filter === 'all') {
+                        renderAvailableEvents(availableEvents);
+                    } else {
+                        const filteredEvents = [];
+                        for (let j = 0; j < availableEvents.length; j++) {
+                            if (availableEvents[j].Category === filter) {
+                                filteredEvents.push(availableEvents[j]);
+                            }
+                        }
+                        renderAvailableEvents(filteredEvents);
+                    }
+                });
+            }
+        }
+        
+        function setupSearch() {
+            const searchInput = document.getElementById('eventSearch');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                if (searchTerm === '') {
+                    const activeFilter = document.querySelector('[data-filter].active').getAttribute('data-filter');
+                    
+                    if (activeFilter === 'all') {
+                        renderAvailableEvents(availableEvents);
+                    } else {
+                        const filteredEvents = [];
+                        for (let i = 0; i < availableEvents.length; i++) {
+                            if (availableEvents[i].Category === activeFilter) {
+                                filteredEvents.push(availableEvents[i]);
+                            }
+                        }
+                        renderAvailableEvents(filteredEvents);
+                    }
+                } else {
+                    const filteredEvents = [];
+                    for (let i = 0; i < availableEvents.length; i++) {
+                        const event = availableEvents[i];
+                        if (
+                            event.EventName.toLowerCase().includes(searchTerm) ||
+                            (event.Description && event.Description.toLowerCase().includes(searchTerm)) ||
+                            event.Category.toLowerCase().includes(searchTerm) ||
+                            (event.VenueName && event.VenueName.toLowerCase().includes(searchTerm))
+                        ) {
+                            filteredEvents.push(event);
+                        }
+                    }
+                    
+                    renderAvailableEvents(filteredEvents);
+                }
+            });
+        }
+        
+        function setupProfileEdit() {
+            const saveButton = document.getElementById('saveProfileBtn');
+            
+            saveButton.addEventListener('click', function() {
+                const form = document.getElementById('editProfileForm');
+                const firstName = document.getElementById('editFirstName').value;
+                const middleName = document.getElementById('editMiddleName').value;
+                const lastName = document.getElementById('editLastName').value;
+                const city = document.getElementById('editCity').value;
+                const phoneNumber = document.getElementById('editPhoneNumber').value;
+                
+                if (!firstName || !lastName || !city) {
+                    showAlert('Please fill in all required fields.', 'danger', '#editProfileModal .modal-body');
+                    return;
+                }
+                
+                if (phoneNumber && (phoneNumber.length !== 11 || !/^\d+$/.test(phoneNumber))) {
+                    showAlert('Please enter a valid 11-digit phone number.', 'danger', '#editProfileModal .modal-body');
+                    return;
+                }
+                
+                saveButton.disabled = true;
+                saveButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+                
+                fetch('/api/users/profile/me', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        firstName,
+                        middleName,
+                        lastName,
+                        city,
+                        phoneNumber
+                    })
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Failed to update profile');
+                    }
+                    return response.json();
+                })
+                .then(function() {
+                    bootstrap.Modal.getInstance(document.getElementById('editProfileModal')).hide();
+                    
+                    loadProfile(function() {
+                        showAlert('Profile updated successfully!', 'success');
+                    });
+                })
+                .catch(function(error) {
+                    console.error('Error updating profile:', error);
+                    showAlert('Failed to update profile. Please try again.', 'danger', '#editProfileModal .modal-body');
+                })
+                .finally(function() {
+                    saveButton.disabled = false;
+                    saveButton.innerHTML = 'Save Changes';
+                });
+            });
+        }
+        
+        function setupRegistrationConfirmation() {
+            const confirmButton = document.getElementById('confirmRegisterBtn');
+            
+            confirmButton.addEventListener('click', function() {
+                if (!registerEventId) return;
+                
+                confirmButton.disabled = true;
+                confirmButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Registering...';
+                
+                fetch(`/api/events/${registerEventId}/register`, {
+                    method: 'POST'
+                })
+                .then(function(response) {
+                    return response.json().then(function(data) {
+                        if (!response.ok) {
+                            throw new Error(data.message || 'Registration failed');
+                        }
+                        return data;
+                    });
+                })
+                .then(function() {
+                    bootstrap.Modal.getInstance(document.getElementById('registerConfirmModal')).hide();
+                    
+                    showAlert('Registration successful!', 'success');
+                    
+                    setTimeout(function() {
+                        loadRegisteredEvents(function() {
+                            loadAvailableEvents();
+                        });
+                    }, 1000);
+                })
+                .catch(function(error) {
+                    console.error('Registration error:', error);
+                    showAlert(error.message || 'Failed to register for the event. Please try again.', 'danger');
+                    
+                    bootstrap.Modal.getInstance(document.getElementById('registerConfirmModal')).hide();
+                })
+                .finally(function() {
+                    confirmButton.disabled = false;
+                    confirmButton.innerHTML = 'Confirm Registration';
+                });
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth(function(user) {
+               
+                
+                
+                
+                document.getElementById('userMenu').innerHTML = createUserMenu(user);
+                document.getElementById('participantName').textContent = user.name;
+                
+                // Load participant data
+                loadProfile(function() {
+                loadRegisteredEvents(function() {
+                loadAvailableEvents(function() {
+                setupEventFilters();
+                
+                setupSearch();
+                
+                setupProfileEdit();
+                
+                setupRegistrationConfirmation();
+                });
+                });
+                });
+        });});
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function() {
+                fetch('/logout', {
+                    method: 'POST'
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = '/login';
+                    } else {
+                        alert('Logout failed. Please try again.');
+                    }
+                }).catch(error => {
+                    console.error('Error during logout:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            });
+        }
+    });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            const newLogoutBtn = logoutBtn.cloneNode(true);
+            logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
+            
+            newLogoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Logout clicked from participant dashboard');
+                
+                newLogoutBtn.disabled = true;
+                newLogoutBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
+                
+                fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    console.log('Logout response:', response);
+                    if (response.ok) {
+                        window.location.href = '/login';
+                    } else {
+                        throw new Error('Logout failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during logout:', error);
+                    alert('Logout failed. Please try again.');
+                    newLogoutBtn.disabled = false;
+                    newLogoutBtn.innerHTML = 'Logout';
+                });
+            });
+        }
+        
+        document.querySelectorAll('.dropdown-menu a').forEach(item => {
+            if (item.textContent.includes('Logout') || 
+                item.textContent.includes('Log out') || 
+                item.textContent.includes('Sign out')) {
+                
+                const newItem = item.cloneNode(true);
+                item.parentNode.replaceChild(newItem, item);
+                
+                newItem.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Logout link clicked');
+                    
+                    fetch('/logout', {
+                        method: 'POST'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/login';
+                        } else {
+                            throw new Error('Logout failed');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error during logout:', error);
+                        alert('Logout failed. Please try again.');
+                    });
+                });
+            }
+        });
+    });
+    </script>
+    <script>
+    function addAccommodationCard() {
+      const cardHtml = `
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Accommodation</h4>
+                <div>
+                  <button class="btn btn-outline-primary" id="requestAccommodationBtn">Request Accommodation</button>
+                </div>
+              </div>
+              <div class="card-body" id="accommodationCardBody">
+                <div class="d-flex justify-content-center">
+                  <div class="spinner-border text-info" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      const profileRow = document.querySelector('.row.mb-4');
+      profileRow.insertAdjacentHTML('afterend', cardHtml);
+      
+      document.getElementById('requestAccommodationBtn').addEventListener('click', requestAccommodation);
+      
+      loadAccommodationData();
+    }
+    
+    // function to load accommodation data
+    async function loadAccommodationData() {
+      try {
+        const response = await fetch('/api/participant/accommodation');
+        if (!response.ok) {
+          throw new Error('Failed to fetch accommodation data');
+        }
+        
+        const data = await response.json();
+        renderAccommodationData(data);
+      } catch (error) {
+        console.error('Error loading accommodation data:', error);
+        document.getElementById('accommodationCardBody').innerHTML = `
+          <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle me-2"></i> Failed to load accommodation information.
+          </div>
+        `;
+      }
+    }
+    
+    // function to render accommodation data
+    function renderAccommodationData(data) {
+      const cardBody = document.getElementById('accommodationCardBody');
+      const requestBtn = document.getElementById('requestAccommodationBtn');
+      
+      if (data.hasAccommodation) {
+        const acc = data.accommodation;
+        const checkInDate = new Date(acc.CheckInDate).toLocaleDateString();
+        const checkOutDate = new Date(acc.CheckOutDate).toLocaleDateString();
+        
+        cardBody.innerHTML = `
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card border-info mb-3">
+                <div class="card-header bg-info text-white">
+                  <i class="fas fa-bed me-2"></i> Your Accommodation Details
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Room ${acc.RoomNumber}</h5>
+                  <p class="card-text">Bed Number: ${acc.BedNO}</p>
+                  <p class="card-text">Location: ${acc.Location}</p>
+                  <p class="card-text">Check-in Date: ${checkInDate}</p>
+                  <p class="card-text">Check-out Date: ${checkOutDate}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card border-secondary mb-3">
+                <div class="card-header">
+                  <i class="fas fa-users me-2"></i> Roommates
+                </div>
+                <div class="card-body">
+                  ${acc.Roommates ? `
+                    <ul class="list-group list-group-flush">
+                      ${acc.Roommates.split(', ').map(name => `
+                        <li class="list-group-item"><i class="fas fa-user me-2"></i> ${name}</li>
+                      `).join('')}
+                    </ul>
+                  ` : '<p class="card-text text-muted">You don\'t have any roommates yet.</p>'}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        requestBtn.disabled = true;
+        requestBtn.innerHTML = '<i class="fas fa-check me-2"></i>Accommodation Allocated';
+        requestBtn.classList.replace('btn-outline-primary', 'btn-success');
+      } else {
+        cardBody.innerHTML = `
+          <div class="text-center p-4">
+            <i class="fas fa-home fa-3x mb-3 text-muted"></i>
+            <h5>No Accommodation Allocated</h5>
+            <p class="text-muted mb-4">You haven't requested accommodation yet. Click the button above to request a room.</p>
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle me-2"></i> Accommodation is subject to availability and will be allocated on a first-come, first-served basis.
+            </div>
+          </div>
+        `;
+        
+        requestBtn.disabled = false;
+        requestBtn.innerHTML = '<i class="fas fa-plus me-2"></i>Request Accommodation';
+        requestBtn.classList.replace('btn-success', 'btn-outline-primary');
+      }
+    }
+    
+    // function to request accommodation
+    async function requestAccommodation() {
+      try {
+        const button = document.getElementById('requestAccommodationBtn');
+        button.disabled = true;
+        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Requesting...';
+        
+        const response = await fetch('/api/participant/request-accommodation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to request accommodation');
+        }
+        
+        showAlert('Accommodation has been allocated successfully!', 'success');
+        
+        loadAccommodationData();
+      } catch (error) {
+        console.error('Error requesting accommodation:', error);
+        showAlert(error.message || 'Failed to request accommodation. Please try again.', 'danger');
+        
+        const button = document.getElementById('requestAccommodationBtn');
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-plus me-2"></i>Request Accommodation';
+      }
+    }
+    </script>
+</body>
+
+</html>

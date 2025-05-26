@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Dashboard - NASCON Event Management System</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/sponsor">
+                <i class="fas fa-handshake me-2"></i>NASCON Sponsor Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/sponsor">Dashboard</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i><span id="username">Sponsor</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/sponsor/profile"><i class="fas fa-id-card me-2"></i>Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container page-content">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="page-title"><i class="fas fa-tachometer-alt me-2"></i>Sponsor Dashboard</h1>
+                <p class="lead">Welcome to your sponsor portal. View your sponsorship packages and payment details.</p>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <div class="card bg-primary text-white h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-box me-2"></i>My Sponsorship Packages</h5>
+                        <h2 class="display-4 mt-3" id="sponsorshipPackagesCount">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card bg-success text-white h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-money-bill-wave me-2"></i>Total Payment Made</h5>
+                        <h2 class="display-4 mt-3" id="totalPaymentAmount">Rs 0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sponsorship Packages -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-list-alt me-2"></i>My Sponsorship Packages</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Package Name</th>
+                                        <th>Description</th>
+                                        <th>Amount Paid</th>
+                                        <th>Payment Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sponsorshipPackagesTable">
+                                    <tr>
+                                        <td colspan="5" class="text-center">Loading packages...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Sponsorship Packages -->
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-tags me-2"></i>Available Sponsorship Packages</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="availablePackagesContainer">
+                            <div class="col-12 text-center">
+                                <p>Loading available packages...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Confirmation Modal -->
+    <div class="modal fade" id="confirmPurchaseModal" tabindex="-1" aria-labelledby="confirmPurchaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmPurchaseModalLabel">Confirm Sponsorship Purchase</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to purchase the <span id="packageNameConfirm" class="fw-bold"></span> package for <span id="packagePriceConfirm" class="fw-bold"></span>?</p>
+                    <p>Your payment status will be set to "Paid" immediately.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmPurchaseBtn">Confirm Purchase</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="small mb-0">&copy; 2023 NASCON Event Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/js/main.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script>
+        let currentUser = null;
+        let purchaseModal = null;
+        let selectedPackage = null;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            purchaseModal = new bootstrap.Modal(document.getElementById('confirmPurchaseModal'));
+            
+            try {
+                const userResponse = await fetch('/getlastuser');
+                
+                if (!userResponse.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                
+                const userData = await userResponse.json();
+                
+                const roleResponse = await fetch('/getrole', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: userData.id })
+                });
+                
+                if (!roleResponse.ok) {
+                    throw new Error('Failed to fetch user role');
+                }
+                
+                const roleData = await roleResponse.json();
+                
+                currentUser = {
+                    ...userData,
+                    role: roleData.role
+                };
+                
+                if (!currentUser) {
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                if (currentUser.role !== 'sponsor') {
+                    alert('Access denied. You are not registered as a sponsor.');
+                    setTimeout(function() {
+                        window.location.href = '/';
+                    }, 2000);
+                    return;
+                }
+                
+                document.getElementById('username').textContent = currentUser.name || 'Sponsor';
+                
+                loadSponsorshipData(currentUser.id);
+                
+                document.getElementById('confirmPurchaseBtn').addEventListener('click', confirmPurchase);
+                
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+                alert('Failed to load dashboard. Please refresh or try again later.');
+            }
+        });
+        
+        async function loadSponsorshipData(sponsorId) {
+            try {
+              
+                const mockData = {
+                    sponsorshipPackages: [
+                        {
+                            name: 'Platinum Sponsor',
+                            description: 'Main event branding, VIP access, premium booth location',
+                            amountPaid: 5000,
+                            paymentDate: '2023-04-15',
+                            status: 'Paid'
+                        },
+                        {
+                            name: 'Gold Package',
+                            description: 'Logo on all materials, sponsor mention, standard booth',
+                            amountPaid: 2500,
+                            paymentDate: '2023-03-22',
+                            status: 'Paid'
+                        }
+                    ],
+                    availablePackages: [
+                        {
+                            id: 1,
+                            name: 'Diamond Sponsor',
+                            description: 'Exclusive branding throughout venue, speaking opportunity, VIP reception hosting',
+                            price: 10000
+                        },
+                        {
+                            id: 2,
+                            name: 'Silver Sponsor',
+                            description: 'Logo on digital materials, sponsor mention, small booth',
+                            price: 1500
+                        },
+                        {
+                            id: 3,
+                            name: 'Bronze Sponsor',
+                            description: 'Logo on website, sponsor mention in program',
+                            price: 750
+                        }
+                    ],
+                    totalPayment: 7500
+                };
+                
+                updateDashboardUI(mockData);
+                
+            } catch (error) {
+                console.error('Error loading sponsorship data:', error);
+                alert('Failed to load sponsorship data. Please try again later.');
+            }
+        }
+        
+        function updateDashboardUI(data) {
+            document.getElementById('sponsorshipPackagesCount').textContent = data.sponsorshipPackages.length;
+            
+            document.getElementById('totalPaymentAmount').textContent = 'Rs ' + data.totalPayment.toLocaleString();
+            
+            const packagesTable = document.getElementById('sponsorshipPackagesTable');
+            if (data.sponsorshipPackages.length > 0) {
+                packagesTable.innerHTML = '';
+                data.sponsorshipPackages.forEach(pkg => {
+                    packagesTable.innerHTML += `
+                        <tr>
+                            <td>${pkg.name}</td>
+                            <td>${pkg.description}</td>
+                            <td>Rs ${pkg.amountPaid.toLocaleString()}</td>
+                            <td>${pkg.paymentDate}</td>
+                            <td><span class="badge bg-${pkg.status === 'Paid' ? 'success' : 'secondary'}">${pkg.status}</span></td>
+                        </tr>
+                    `;
+                });
+            } else {
+                packagesTable.innerHTML = '<tr><td colspan="5" class="text-center">No sponsorship packages found</td></tr>';
+            }
+            
+            const availablePackagesContainer = document.getElementById('availablePackagesContainer');
+            if (data.availablePackages.length > 0) {
+                availablePackagesContainer.innerHTML = '';
+                data.availablePackages.forEach(pkg => {
+                    availablePackagesContainer.innerHTML += `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">${pkg.name}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">Rs ${pkg.price.toLocaleString()}</h6>
+                                    <p class="card-text">${pkg.description}</p>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-primary btn-sm w-100" onclick="showPurchaseConfirmation(${pkg.id}, '${pkg.name}', ${pkg.price})">
+                                        Purchase Package
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                availablePackagesContainer.innerHTML = '<div class="col-12 text-center"><p>No available packages at this time</p></div>';
+            }
+        }
+        
+        function showPurchaseConfirmation(packageId, packageName, packagePrice) {
+            selectedPackage = {
+                id: packageId,
+                name: packageName,
+                price: packagePrice
+            };
+            
+            document.getElementById('packageNameConfirm').textContent = packageName;
+            document.getElementById('packagePriceConfirm').textContent = 'Rs ' + packagePrice.toLocaleString();
+            
+            purchaseModal.show();
+        }
+        
+        async function confirmPurchase() {
+            try {
+                purchaseModal.hide();
+                
+                const response = await fetch('/api/sponsor/purchase-package', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        packageId: selectedPackage.id,
+                        contractDetails: `Sponsorship package: ${selectedPackage.name} for Rs ${selectedPackage.price}`
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to purchase package');
+                }
+                
+                const result = await response.json();
+                
+                // Show success message
+                alert('Sponsorship package purchased successfully! Your payment status is set to "Paid".');
+                
+                const currentDate = new Date().toISOString().split('T')[0];
+                const newPackage = {
+                    name: selectedPackage.name,
+                    description: selectedPackage.description || 'Standard sponsorship package',
+                    amountPaid: selectedPackage.price,
+                    paymentDate: currentDate,
+                    status: 'Paid'
+                };
+                
+                const packagesTable = document.getElementById('sponsorshipPackagesTable');
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${newPackage.name}</td>
+                    <td>${newPackage.description}</td>
+                    <td>Rs ${newPackage.amountPaid.toLocaleString()}</td>
+                    <td>${newPackage.paymentDate}</td>
+                    <td><span class="badge bg-success">Paid</span></td>
+                `;
+                packagesTable.prepend(newRow); 
+                
+                const currentCount = parseInt(document.getElementById('sponsorshipPackagesCount').textContent, 10);
+                document.getElementById('sponsorshipPackagesCount').textContent = currentCount + 1;
+                
+                const currentTotal = parseInt(document.getElementById('totalPaymentAmount').textContent.replace('Rs ', '').replace(/,/g, ''), 10);
+                document.getElementById('totalPaymentAmount').textContent = 'Rs ' + (currentTotal + selectedPackage.price).toLocaleString();
+                
+                const availablePackagesContainer = document.getElementById('availablePackagesContainer');
+                const packageCards = availablePackagesContainer.querySelectorAll('.card');
+                packageCards.forEach(card => {
+                    const titleElement = card.querySelector('.card-title');
+                    if (titleElement && titleElement.textContent === selectedPackage.name) {
+                        card.closest('.col-md-4').remove();
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Error purchasing package:', error);
+                alert('Failed to purchase package: ' + error.message);
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    fetch('/logout', {
+                        method: 'POST'
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/login';
+                        } else {
+                            alert('Logout failed. Please try again.');
+                        }
+                    }).catch(error => {
+                        console.error('Error during logout:', error);
+                        alert('An error occurred. Please try again.');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

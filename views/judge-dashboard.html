@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Judge Dashboard - NASCON Event Management System</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/judge">
+                <i class="fas fa-gavel me-2"></i>NASCON Judge Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/judge">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/judge/events">My Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/judge/scoring">Scoring</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i><span id="username">Judge</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/judge/profile"><i class="fas fa-id-card me-2"></i>Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container page-content">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="page-title"><i class="fas fa-tachometer-alt me-2"></i>Judge Dashboard</h1>
+                <p class="lead">Welcome to your judge portal. Manage your events and scoring from here.</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card bg-primary text-white h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-calendar-check me-2"></i>Assigned Events</h5>
+                        <h2 class="display-4 mt-3" id="assignedEventsCount">0</h2>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                        <a href="/judge/events" class="text-white">View Details</a>
+                        <i class="fas fa-arrow-circle-right text-white"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-success text-white h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-check-circle me-2"></i>Completed Evaluations</h5>
+                        <h2 class="display-4 mt-3" id="completedEvaluationsCount">0</h2>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                        <a href="/judge/scoring?status=completed" class="text-white">View Details</a>
+                        <i class="fas fa-arrow-circle-right text-white"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-warning text-white h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-hourglass-half me-2"></i>Pending Evaluations</h5>
+                        <h2 class="display-4 mt-3" id="pendingEvaluationsCount">0</h2>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                        <a href="/judge/scoring?status=pending" class="text-white">View Details</a>
+                        <i class="fas fa-arrow-circle-right text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Upcoming Events to Judge</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Event Name</th>
+                                        <th>Date & Time</th>
+                                        <th>Venue</th>
+                                        <th>Category</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="upcomingEventsTable">
+                                    <tr>
+                                        <td colspan="5" class="text-center">Loading events...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="small mb-0">&copy; 2023 NASCON Event Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const userResponse = await fetch('/getlastuser');
+                
+                if (!userResponse.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                
+                const userData = await userResponse.json();
+                
+                const roleResponse = await fetch('/getrole', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: userData.id })
+                });
+                
+                if (!roleResponse.ok) {
+                    throw new Error('Failed to fetch user role');
+                }
+                
+                const roleData = await roleResponse.json();
+                
+                const user = {
+                    ...userData,
+                    role: roleData.role
+                };
+                
+                if (!user) {
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                if (user.role !== 'judge') {
+                    showAlert('Access denied. You are not registered as a judge.');
+                    setTimeout(function() {
+                        window.location.href = '/';
+                    }, 2000);
+                    return;
+                }
+                
+                await loadJudgeDashboard(user);
+                
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+                showAlert('Failed to load dashboard. Please refresh or try again later.', 'danger');
+            }
+        });
+        
+        async function loadJudgeDashboard() {
+            try {
+                const response = await fetch('/api/judge/dashboard');
+                const data = await response.json();
+                
+                document.getElementById('assignedEventsCount').textContent = data.assignedEventsCount || 0;
+                document.getElementById('completedEvaluationsCount').textContent = data.completedEvaluationsCount || 0;
+                document.getElementById('pendingEvaluationsCount').textContent = data.pendingEvaluationsCount || 0;
+                
+                const upcomingEventsTable = document.getElementById('upcomingEventsTable');
+                if (data.upcomingEvents && data.upcomingEvents.length > 0) {
+                    upcomingEventsTable.innerHTML = '';
+                    data.upcomingEvents.forEach(event => {
+                        const date = new Date(event.date_time);
+                        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                        
+                        upcomingEventsTable.innerHTML += `
+                            <tr>
+                                <td>${event.name}</td>
+                                <td>${formattedDate}</td>
+                                <td>${event.venue_name}</td>
+                                <td>${event.category}</td>
+                                <td>
+                                    <a href="/judge/scoring/${event.id}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-clipboard-list me-1"></i>Score
+                                    </a>
+                                    <a href="/judge/events/${event.id}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-info-circle me-1"></i>Details
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    upcomingEventsTable.innerHTML = '<tr><td colspan="5" class="text-center">No upcoming events found</td></tr>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading judge dashboard:', error);
+                alert('Failed to load dashboard data. Please try again later.');
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    fetch('/logout', {
+                        method: 'POST'
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/login';
+                        } else {
+                            alert('Logout failed. Please try again.');
+                        }
+                    }).catch(error => {
+                        console.error('Error during logout:', error);
+                        alert('An error occurred. Please try again.');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

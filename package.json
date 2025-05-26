@@ -1,0 +1,25 @@
+{
+  "name": "nodeproject",
+  "version": "1.0.0",
+  "description": "NASCON Event Management System",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "dev": "nodemon main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-session": "^1.17.3",
+    "mysql2": "^3.6.0",
+    "sync-mysql": "^3.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "author": "",
+  "license": "ISC"
+}

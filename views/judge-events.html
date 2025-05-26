@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Events - Judge Portal</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/judge">
+                <i class="fas fa-gavel me-2"></i>NASCON Judge Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/judge">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/judge/events">My Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/judge/scoring">Scoring</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i><span id="username">Judge</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/judge/profile"><i class="fas fa-id-card me-2"></i>Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- main Content -->
+    <div class="container py-4 page-content">
+        <h1 class="mb-4"><i class="fas fa-calendar-check me-2"></i>My Events</h1>
+        
+        <ul class="nav nav-tabs mb-4" id="eventTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="true">Upcoming Events</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="past-tab" data-bs-toggle="tab" data-bs-target="#past" type="button" role="tab" aria-controls="past" aria-selected="false">Past Events</button>
+            </li>
+        </ul>
+        
+        <div class="tab-content" id="eventTabsContent">
+            <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Event Name</th>
+                                <th>Category</th>
+                                <th>Date & Time</th>
+                                <th>Venue</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="upcomingEventsTable">
+                            <tr>
+                                <td colspan="5" class="text-center">Loading events...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="tab-pane fade" id="past" role="tabpanel" aria-labelledby="past-tab">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Event Name</th>
+                                <th>Category</th>
+                                <th>Date & Time</th>
+                                <th>Venue</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pastEventsTable">
+                            <tr>
+                                <td colspan="6" class="text-center">Loading events...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="small mb-0">&copy; 2023 NASCON Event Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/js/main.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const userResponse = await fetch('/getlastuser');
+                if (!userResponse.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                
+                const userData = await userResponse.json();
+                document.getElementById('username').textContent = userData.name;
+                
+                await loadEvents();
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                alert('Failed to load the page. Please try again later.');
+            }
+        });
+        
+        async function loadEvents() {
+            try {
+                const response = await fetch('/api/judge/events');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch events');
+                }
+                
+                const data = await response.json();
+                
+                // Render upcoming events
+                const upcomingEventsTable = document.getElementById('upcomingEventsTable');
+                if (data.upcoming && data.upcoming.length > 0) {
+                    upcomingEventsTable.innerHTML = '';
+                    data.upcoming.forEach(event => {
+                        const date = new Date(event.EventDateTime);
+                        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                        
+                        upcomingEventsTable.innerHTML += `
+                            <tr>
+                                <td>${event.EventName}</td>
+                                <td>${event.Category}</td>
+                                <td>${formattedDate}</td>
+                                <td>${event.VenueName}</td>
+                                <td>
+                                    <a href="/judge/events/${event.EventID}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-info-circle me-1"></i>Details
+                                    </a>
+                                    <a href="/judge/scoring/${event.EventID}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-clipboard-list me-1"></i>Score
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    upcomingEventsTable.innerHTML = '<tr><td colspan="5" class="text-center">No upcoming events found</td></tr>';
+                }
+                
+                // Render past events
+                const pastEventsTable = document.getElementById('pastEventsTable');
+                if (data.past && data.past.length > 0) {
+                    pastEventsTable.innerHTML = '';
+                    data.past.forEach(event => {
+                        const date = new Date(event.EventDateTime);
+                        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                        const isScored = event.ScoredCount > 0;
+                        
+                        pastEventsTable.innerHTML += `
+                            <tr>
+                                <td>${event.EventName}</td>
+                                <td>${event.Category}</td>
+                                <td>${formattedDate}</td>
+                                <td>${event.VenueName}</td>
+                                <td>
+                                    <span class="badge ${isScored ? 'bg-success' : 'bg-warning'}">
+                                        ${isScored ? 'Scored' : 'Not Scored'}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="/judge/events/${event.EventID}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-info-circle me-1"></i>Details
+                                    </a>
+                                    <a href="/judge/scoring/${event.EventID}" class="btn btn-sm ${isScored ? 'btn-secondary' : 'btn-primary'}">
+                                        <i class="fas fa-clipboard-list me-1"></i>${isScored ? 'Review Score' : 'Score'}
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    pastEventsTable.innerHTML = '<tr><td colspan="6" class="text-center">No past events found</td></tr>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading events:', error);
+                document.getElementById('upcomingEventsTable').innerHTML = 
+                    '<tr><td colspan="5" class="text-center text-danger">Failed to load events. Please try again later.</td></tr>';
+                document.getElementById('pastEventsTable').innerHTML = 
+                    '<tr><td colspan="6" class="text-center text-danger">Failed to load events. Please try again later.</td></tr>';
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    fetch('/logout', {
+                        method: 'POST'
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/login';
+                        } else {
+                            alert('Logout failed. Please try again.');
+                        }
+                    }).catch(error => {
+                        console.error('Error during logout:', error);
+                        alert('An error occurred. Please try again.');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

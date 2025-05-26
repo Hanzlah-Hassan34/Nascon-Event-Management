@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASCON Event Management System</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-calendar-alt me-2"></i>NASCON Events
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#events">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                </ul>
+                <div class="d-flex" id="authButtons">
+                    <a href="/login" class="btn btn-outline-light me-2">Login</a>
+                    <a href="/signup" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bg-dark bg-gradient text-white py-5">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold">Welcome to NASCON Event Management</h1>
+                    <p class="lead">Join exciting competitions, tech events, gaming tournaments, and more!</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+                        <a href="#events" class="btn btn-primary btn-lg px-4 me-md-2">Browse Events</a>
+                        <a href="/signup" class="btn btn-outline-light btn-lg px-4">Register Now</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <div class="card bg-dark border-secondary">
+                        <div class="card-body text-center">
+                            <i class="fas fa-calendar-check fa-10x opacity-75 text-primary"></i>
+                            <h4 class="mt-3">NASCON 2025</h4>
+                            <p class="text-muted">The premier technological and business competition event</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="alertContainer" class="container mt-3"></div>
+
+    <div class="container py-5">
+        <h2 class="text-center mb-5" id="events">Event Categories</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-laptop-code dashboard-icon text-info"></i>
+                        <h4 class="card-title">Tech Events</h4>
+                        <p class="card-text">Coding challenges, hackathons, AI competitions, and more tech-focused events.</p>
+                        <a href="#" class="btn btn-outline-info mt-3 category-btn" data-category="Tech Events">View Tech Events</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-briefcase dashboard-icon text-warning"></i>
+                        <h4 class="card-title">Business Competitions</h4>
+                        <p class="card-text">Case studies, entrepreneurship challenges, and business-focused competitions.</p>
+                        <a href="#" class="btn btn-outline-warning mt-3 category-btn" data-category="Business Competitions">View Business Events</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-gamepad dashboard-icon text-danger"></i>
+                        <h4 class="card-title">Gaming Tournaments</h4>
+                        <p class="card-text">E-Sports, console gaming, and gaming tournaments for all levels.</p>
+                        <a href="#" class="btn btn-outline-danger mt-3 category-btn" data-category="Gaming Tournaments">View Gaming Events</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users dashboard-icon text-success"></i>
+                        <h4 class="card-title">General Events</h4>
+                        <p class="card-text">Debates, photography contests, quiz competitions, and other general events.</p>
+                        <a href="#" class="btn btn-outline-success mt-3 category-btn" data-category="General Events">View General Events</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Featured Events</h2>
+            <a href="#" class="btn btn-outline-primary">View All Events</a>
+        </div>
+        
+        <div class="row" id="featuredEventsContainer">
+            <div class="spinner-container col-12">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-dark bg-gradient text-white py-5" id="about">
+        <div class="container py-3">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="display-6 fw-bold">About NASCON</h2>
+                    <p class="lead">NASCON is the premier technology and business competition platform, providing opportunities for students to showcase their skills and talents.</p>
+                    <p>Our event management system allows organizers to create and manage diverse events, while participants can easily discover and register for competitions that match their interests.</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card bg-dark bg-gradient">
+                        <div class="card-body">
+                            <h3 class="card-title">Key Features</h3>
+                            <ul class="list-group list-group-flush bg-transparent">
+                                <li class="list-group-item bg-transparent text-white border-light">
+                                    <i class="fas fa-check-circle me-2 text-success"></i>
+                                    Multiple event categories
+                                </li>
+                                <li class="list-group-item bg-transparent text-white border-light">
+                                    <i class="fas fa-check-circle me-2 text-success"></i>
+                                    Simple registration process
+                                </li>
+                                <li class="list-group-item bg-transparent text-white border-light">
+                                    <i class="fas fa-check-circle me-2 text-success"></i>
+                                    Comprehensive event details
+                                </li>
+                                <li class="list-group-item bg-transparent text-white border-light">
+                                    <i class="fas fa-check-circle me-2 text-success"></i>
+                                    Accommodation management
+                                </li>
+                                <li class="list-group-item bg-transparent text-white border-light">
+                                    <i class="fas fa-check-circle me-2 text-success"></i>
+                                    Judging and evaluation system
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-dark text-white text-center py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h5>NASCON Event Management</h5>
+                    <p class="small">The premier platform for academic and technical competitions.</p>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-decoration-none text-white-50">Home</a></li>
+                        <li><a href="#events" class="text-decoration-none text-white-50">Events</a></li>
+                        <li><a href="#about" class="text-decoration-none text-white-50">About</a></li>
+                        <li><a href="/login" class="text-decoration-none text-white-50">Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Connect With Us</h5>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#" class="text-white"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="small mb-0">&copy; 2023 NASCON Event Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/getlastuser')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Not logged in');
+                    }
+                    return response.json();
+                })
+                .then(user => {
+                    if (user && user.id) {
+                        fetch('/getrole', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ id: user.id })
+                        })
+                        .then(response => response.json())
+                        .then(roleData => {
+                            const authButtonsContainer = document.getElementById('authButtons');
+                            authButtonsContainer.innerHTML = `
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-user me-1"></i> ${user.name}
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                        <li><a class="dropdown-item" href="/${roleData.role}">Dashboard</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+                                    </ul>
+                                </div>
+                            `;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching user role:', error);
+                            loadFeaturedEvents();
+                        });
+                    } else {
+                        loadFeaturedEvents();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking authentication:', error);
+                    loadFeaturedEvents();
+                });
+                
+            let flag=true;
+            document.querySelector('[data-category="Tech Events"]').addEventListener('click', function(event) {
+                event.preventDefault();
+                loadEventsByCategory('Tech Events');
+                flag=false;
+            });
+            
+            document.querySelector('[data-category="Business Competitions"]').addEventListener('click', function(event) {
+                event.preventDefault();
+                loadEventsByCategory('Business Competitions');
+                flag=false;
+            });
+            
+            document.querySelector('[data-category="Gaming Tournaments"]').addEventListener('click', function(event) {
+                event.preventDefault();
+                loadEventsByCategory('Gaming Tournaments');
+                flag=false;
+            });
+            
+            document.querySelector('[data-category="General Events"]').addEventListener('click', function(event) {
+                event.preventDefault();
+                loadEventsByCategory('General Events');
+                flag=false;
+            });
+            
+            if (flag) {
+                loadFeaturedEvents();
+            }
+        });
+        
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch('/logout', {
+                    method: 'POST',
+                })
+                .then(() => {
+                    window.location.href = '/login';
+                })
+                .catch(error => {
+                    console.error('Logout error:', error);
+                    alert('Logout failed. Please try again.');
+                });
+            }
+        }
+        
+        function loadFeaturedEvents() {
+            console.log('here0');
+
+            fetch('/getevents')
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch events');
+                    }
+                    return response.json();
+                })
+                .then(function(events) {
+                    console.log('here1');
+                    const featuredEventsContainer = document.getElementById('featuredEventsContainer');
+                    console.log('here2');
+
+                    featuredEventsContainer.innerHTML = '';
+                    
+                    
+                    if (events.length === 0) {
+                        featuredEventsContainer.innerHTML = `
+                            <div class="col-12 text-center">
+                                <p>No events available at the moment. Check back soon!</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    for (let i = 0; i < events.length; i++) {
+                        featuredEventsContainer.innerHTML += createEventCard(events[i]);
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error loading events:', error);
+                    document.getElementById('featuredEventsContainer').innerHTML = `
+                        <div class="col-12 text-center">
+                            <p class="text-danger">Failed to load events. Please try again later.</p>
+                        </div>
+                    `;
+                });
+        }
+
+        function createEventCard(event) {
+            return `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card event-card h-100">
+                        <div class="card-header">
+                            <span class="badge bg-${getBadgeClass(event.Category)}">${event.Category}</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${event.EventName}</h5>
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar-alt"></i> ${event.EventDate ? formatDate(event.EventDate) : 'Date TBD'}
+                                </small>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-map-marker-alt"></i> ${event.VenueName || 'Venue TBD'}
+                                </small>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-user"></i> Organizer: ${event.FirstName || 'Unknown'}
+                                </small>
+                            </div>
+                            <div>
+                                <small class="text-muted">
+                                    <i class="fas fa-money-bill"></i> Registration Fee: Rs. ${event.RegistrationFee || 0}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="/event/${event.EventID}" class="btn btn-outline-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getBadgeClass(category) {
+            switch (category) {
+                case 'Tech Events':
+                    return 'info';
+                case 'Business Competitions':
+                    return 'warning';
+                case 'Gaming Tournaments':
+                    return 'danger';
+                case 'General Events':
+                    return 'success';
+                default:
+                    return 'secondary';
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric'
+            };
+            
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        function loadEventsByCategory(category) {
+            console.log('Loading events for category:', category);
+            
+            const featuredEventsContainer = document.getElementById('featuredEventsContainer');
+            featuredEventsContainer.innerHTML = `
+                <div class="col-12 text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading ${category} events...</p>
+                </div>
+            `;
+            
+            fetch('/geteventbycategoryindex', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ category: category })
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch events');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('Retrieved category data:', data);
+                featuredEventsContainer.innerHTML = '';
+                
+                let events = data;                
+                if (events.length === 0) {
+                    featuredEventsContainer.innerHTML = `
+                        <div class="col-12 text-center">
+                            <p>No ${category} events available at the moment.</p>
+                            <button class="btn btn-sm btn-outline-secondary mt-3" onclick="loadFeaturedEvents()">
+                                View All Events
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                featuredEventsContainer.innerHTML = `
+                    <div class="col-12 mb-4">
+                        <h3>${category}</h3>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="loadFeaturedEvents()">
+                            Back to All Events
+                        </button>
+                    </div>
+                `;
+                
+                const displayEvents = events.slice(0, 8);
+                
+                for (let i = 0; i < displayEvents.length; i++) {
+                    featuredEventsContainer.innerHTML += createEventCard(displayEvents[i]);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error loading events for category:', error);
+                featuredEventsContainer.innerHTML = `
+                    <div class="col-12 text-center">
+                        <p class="text-danger">Failed to load ${category} events. Please try again later.</p>
+                        <button class="btn btn-sm btn-outline-secondary mt-3" onclick="loadFeaturedEvents()">
+                            View All Events
+                        </button>
+                    </div>
+                `;
+            });
+        }
+        
+    </script>
+</body>
+</html>

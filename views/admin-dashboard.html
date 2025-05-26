@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - NASCON Event Management System</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-calendar-alt me-2"></i>NASCON Events
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin">Dashboard</a>
+                    </li>
+                </ul>
+                <div class="d-flex" id="userMenu">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4 page-content">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h2 class="mb-0">Admin Dashboard</h2>
+                                <p class="mb-0">Welcome, <span id="adminName">Admin</span></p>
+                            </div>
+                            <div class="ms-auto">
+                                <a id="createEventButton" class="btn btn-light">
+                                    <i class="fas fa-plus me-2"></i>Create New Event
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar dashboard-icon text-primary"></i>
+                        <h4 class="card-title">Total Events</h4>
+                        <p class="card-text display-6" id="totalEvents">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users dashboard-icon text-info"></i>
+                        <h4 class="card-title">Participants</h4>
+                        <p class="card-text display-6" id="totalParticipants">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-tie dashboard-icon text-warning"></i>
+                        <h4 class="card-title">Organizers</h4>
+                        <p class="card-text display-6" id="totalOrganizers">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-building dashboard-icon text-success"></i>
+                        <h4 class="card-title">Venues</h4>
+                        <p class="card-text display-6" id="totalVenues">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">All Events</h3>
+                    <div class="d-flex gap-2">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="eventSearch" placeholder="Search events...">
+                            <button class="btn btn-outline-secondary" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Event Name</th>
+                                <th>Category</th>
+                                <th>Date & Time</th>
+                                <th>Venue</th>
+                                <th>Organizer</th>
+                                <th>Reg. Fee</th> 
+                                <th>Max Participants</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventsTableBody">
+                            <tr>
+                                <td colspan="8" class="text-center"> 
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>NASCON Reports</h5>
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm btn-outline-primary" onclick="loadReport('registration-revenue')">Registration Revenue</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary" onclick="loadReport('sponsorship-funds')">Sponsorship Funds</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary" onclick="loadReport('participants-by-event')">Participants by Event</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary" onclick="loadReport('accommodation')">Accommodation Allocation</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary" onclick="loadReport('venue-utilization')">Venue Utilization</button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div id="reportSummary" class="mb-4">
+                  <div class="row">
+                    <div class="col-md-12 text-center">
+                      <p class="text-muted">Select a report from the options above</p>
+                    </div>
+                  </div>
+                </div>
+                <div id="reportContent">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">User Management</h3>
+                    <div class="input-group" style="max-width: 300px;">
+                        <input type="text" class="form-control" id="userSearch" placeholder="Search users...">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs mb-3" id="userTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="all-users-tab" data-bs-toggle="tab" data-bs-target="#all-users" type="button" role="tab" aria-controls="all-users" aria-selected="true">All Users</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="organizers-tab" data-bs-toggle="tab" data-bs-target="#organizers" type="button" role="tab" aria-controls="organizers" aria-selected="false">Organizers</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="participants-tab" data-bs-toggle="tab" data-bs-target="#participants" type="button" role="tab" aria-controls="participants" aria-selected="false">Participants</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="judges-tab" data-bs-toggle="tab" data-bs-target="#judges" type="button" role="tab" aria-controls="judges" aria-selected="false">Judges</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="sponsors-tab" data-bs-toggle="tab" data-bs-target="#sponsors" type="button" role="tab" aria-controls="sponsors" aria-selected="false">Sponsors</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="userTabsContent">
+                    <div class="tab-pane fade show active" id="all-users" role="tabpanel" aria-labelledby="all-users-tab">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>City</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allUsersTableBody">
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="organizers" role="tabpanel" aria-labelledby="organizers-tab">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Experience</th>
+                                        <th>Events Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="organizersTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="participants" role="tabpanel" aria-labelledby="participants-tab">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>City</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="participantsTableBody">
+                                </tbody>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="judges" role="tabpanel" aria-labelledby="judges-tab">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>City</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="judgesTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="sponsors" role="tabpanel" aria-labelledby="sponsors-tab">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>City</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sponsorsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteEventModal" tabindex="-1" aria-labelledby="deleteEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteEventModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the event "<span id="deleteEventName"></span>"?</p>
+                    <p class="text-danger">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteEvent">Delete Event</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="small mb-0">&copy; 2023 NASCON Event Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        let currentEvents = [];
+        let allOrganizers = [];
+        let allParticipants = [];
+        let allusers = [];
+        let deleteEventId = null;
+
+        document.addEventListener('DOMContentLoaded', async function() { 
+            try {
+                const user = { name: 'Admin User' };
+                
+                document.getElementById('userMenu').innerHTML = createUserMenu(user);
+                document.getElementById('adminName').textContent = user.name;
+                
+                
+                    loadEvents();
+                    loadUsers('user');
+                   await loadUsers('organizer');
+                   await loadUsers('participant');
+                  await  loadUsers('sponsor');
+                  await  loadUsers('judge');
+                
+                
+                await loadStats();
+                
+                setupDeleteEventModal();
+                createEvent();
+
+            } catch (error) {
+                console.error("Initialization failed:", error);
+            }
+        });
+        
+        function setupDeleteEventModal() {
+            const deleteEventModal = document.getElementById('deleteEventModal');
+            deleteEventModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const eventId = button.getAttribute('data-event-id');
+                const eventName = button.getAttribute('data-event-name');
+                
+                document.getElementById('deleteEventName').textContent = eventName;
+                deleteEventId = eventId;
+            });
+            
+            document.getElementById('confirmDeleteEvent').addEventListener('click', async function() { 
+                if (deleteEventId) {
+                    try {
+                        await deleteEvent(deleteEventId); 
+                        const modal = bootstrap.Modal.getInstance(deleteEventModal);
+                        modal.hide();
+                    } catch (error) {
+                        console.error("Error during delete confirmation:", error);
+                    }
+                }
+            });
+        }
+        
+        function createUserMenu(user) {
+            return `
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-shield me-1"></i> ${user.name}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/admin">Dashboard</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+                    </ul>
+                </div>
+            `;
+        }
+        
+        async function loadEvents() { 
+            try {
+                const response = await fetch('/getevents'); 
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch events (Status: ${response.status})`); 
+                }
+                const events = await response.json(); 
+                currentEvents = events;
+                renderEventsTable(currentEvents);
+            } catch (error) {
+                console.error('Error loading events:', error);
+                document.getElementById('eventsTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center text-danger">
+                            Failed to load events. Please try again later. (${error.message})
+                        </td>
+                    </tr>
+                `;
+                throw error; 
+            }
+        }
+        
+        function renderEventsTable(events) {
+            const tableBody = document.getElementById('eventsTableBody');
+            tableBody.innerHTML = ''; 
+
+            if (!events || events.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            No events found.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            events.forEach(function(event) {
+                const tr = document.createElement('tr');
+
+                const eventName = event.EventName;
+                const category = event.Category;
+                const eventDate = event.EventDateTime;
+                const venueName = event.VenueName;
+                const organizerName = event.FirstName; 
+                const registrationFee = event.RegistrationFee;
+                const eventId = event.EventID || null; 
+                const maxParticipants = event.MaxParticipants || 'N/A'; 
+
+                tr.innerHTML = `
+                    <td>${eventName || 'N/A'}</td> 
+                    <td>
+                        <span class="badge ${getEventBadgeClass(category)}"> 
+                            ${category || 'N/A'} 
+                        </span>
+                    </td>
+                    <td>${eventDate ? (eventDate) : 'N/A'}</td> 
+                    <td>${venueName || 'Not assigned'}</td> 
+                    <td>${organizerName || 'N/A'}</td> 
+                    <td>${registrationFee !== null && registrationFee !== undefined ? registrationFee : 'N/A'}</td> 
+                    <td>${maxParticipants}</td> 
+                    <td>
+                        <div class="btn-group">
+                            <a href="/event/${eventId}" class="btn btn-sm btn-info ${!eventId ? 'disabled' : ''}"> 
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="/eventedit/${eventId}" class="btn btn-sm btn-warning ${!eventId ? 'disabled' : ''}"> 
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-danger" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#deleteEventModal"
+                                data-event-id="${eventId}" 
+                                data-event-name="${eventName || 'Unknown'}" 
+                                ${!eventId ? 'disabled' : ''}> 
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+
+                tableBody.appendChild(tr); 
+            });
+        }
+
+        async function loadUsers(role) { 
+            try {
+                let url = '/get'+role+'admin';
+
+                const response = await fetch(url); 
+                console.log('loaduseend1');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch users (Status: ${response.status})`);
+                }
+                const users = await response.json(); 
+                if(role=='user'){
+                    allusers = users;
+                }else if (role=='organizer'){
+                    allOrganizers = users;
+                }else if (role=='participant'){
+                    allParticipants = users;
+                }
+                console.log('loaduseend');
+                renderUsersTable(users,role);
+            } catch (error) {
+                console.error('Error loading users:', error);
+                document.getElementById('allUsersTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center text-danger"> 
+                            Failed to load users. Please try again later. (${error.message})
+                        </td>
+                    </tr>
+                `;
+                 document.getElementById('organizersTableBody').innerHTML = `<tr><td colspan="5" class="text-center text-danger">Failed to load organizers.</td></tr>`; // Adjust colspan if needed
+                 document.getElementById('participantsTableBody').innerHTML = `<tr><td colspan="6" class="text-center text-danger">Failed to load participants.</td></tr>`; // Adjust colspan if needed
+                throw error; 
+            }
+        }
+        
+        function renderUsersTable(users,role) {
+            let tablename=''
+            if(role=='user'){
+                tablename='allUsersTableBody'
+            }else if(role=='organizer'){
+                tablename='organizersTableBody'
+            }else if(role=='participant'){
+                tablename='participantsTableBody'
+            }else if(role=='judge'){
+                tablename='judgesTableBody'
+            }else if(role=='sponsor'){
+                tablename='sponsorsTableBody'
+            }
+            const allUsersTable = document.getElementById(tablename);
+           
+
+            allUsersTable.innerHTML = '';
+            
+
+            if (!users || users.length === 0) {
+                allUsersTable.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            No users found.
+                        </td>
+                    </tr>
+                `;
+                
+                return;
+            }
+
+            users.forEach(function(user) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${user.FirstName} ${user.MiddleName ? user.MiddleName + ' ' : ''}${user.LastName}</td>
+                    <td>${user.Email || 'N/A'}</td>
+                    <td>
+                        <span class="badge ${getRoleBadgeClass(user.role)}">
+                            ${user.role || 'unknown'}
+                        </span>
+                    </td>
+                    <td>${user.city || 'N/A'}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-info" onclick="viewUser(${user.UserID})" title="View">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-warning" onclick="editUser(${user.UserID})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.UserID})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                allUsersTable.appendChild(tr); 
+                
+            });
+        }
+        function getRoleBadgeClass(role) {
+            switch (role) {
+                case 'admin':
+                    return 'bg-danger';
+                case 'organizer':
+                    return 'bg-warning text-dark';
+                case 'participant':
+                    return 'bg-info text-dark';
+                default:
+                    return 'bg-secondary';
+            }
+        }
+        
+        function getEventCount(organizerId) {
+            return currentEvents.filter(function(event) {
+                return event.OrganizerID === organizerId;
+            }).length;
+        }
+
+        function createEvent(){
+            const createEventButton=document.getElementById('createEventButton');
+            createEventButton.addEventListener('click',function(){
+                window.location.href='eventCreate';
+
+            })
+
+
+        };
+        function loadStats() {
+            console.log('loadStats');
+            document.getElementById('totalEvents').textContent = currentEvents.length;
+            
+            document.getElementById('totalParticipants').textContent = allParticipants.length;
+            
+            document.getElementById('totalOrganizers').textContent = allOrganizers.length;
+            
+            fetch('/getvenues')
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch venues');
+                    }
+                    return response.json();
+                })
+                .then(function(venues) {
+                    document.getElementById('totalVenues').textContent = venues.length;
+                })
+                .catch(function(error) {
+                    console.error('Error loading venues:', error);
+                    document.getElementById('totalVenues').textContent = '0'; 
+                });
+        }
+        
+        function setupSearch() {
+            const eventSearch = document.getElementById('eventSearch');
+            const userSearch = document.getElementById('userSearch');
+            
+            eventSearch.addEventListener('input', function() {
+                const searchTerm = eventSearch.value.toLowerCase();
+                const filteredEvents = currentEvents.filter(function(event) {
+                    return event.EventName.toLowerCase().includes(searchTerm) ||
+                        event.Category.toLowerCase().includes(searchTerm) ||
+                        (event.VenueName && event.VenueName.toLowerCase().includes(searchTerm));
+                });
+                renderEventsTable(filteredEvents);
+            });
+            
+            userSearch.addEventListener('input', function() {
+                const searchTerm = userSearch.value.toLowerCase();
+                const filteredUsers = allUsers.filter(function(user) {
+                    return `${user.FirstName} ${user.LastName}`.toLowerCase().includes(searchTerm) ||
+                        user.Email.toLowerCase().includes(searchTerm) ||
+                        user.city.toLowerCase().includes(searchTerm) ||
+                        user.role.toLowerCase().includes(searchTerm);
+                });
+                renderUsersTable(filteredUsers);
+            });
+        }
+        
+        function deleteEvent(eventId) {
+            document.getElementById('confirmDeleteEvent').disabled = true;
+            document.getElementById('confirmDeleteEvent').innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Deleting...
+            `;
+            
+            fetch('/deleteeventadmin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ eventId: eventId })
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Failed to delete event');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                loadEvents();
+                loadStats();
+                showAlert('Event deleted successfully.', 'success');
+            })
+            .catch(function(error) {
+                console.error('Error deleting event:', error);
+                showAlert('Failed to delete event. Please try again.', 'danger');
+            })
+            .finally(function() {
+                document.getElementById('confirmDeleteEvent').disabled = false;
+                document.getElementById('confirmDeleteEvent').innerHTML = 'Delete Event';
+            });
+        }
+        
+        function showAlert(message, type = 'danger') {
+            let alertContainer = document.getElementById('alertContainer');
+            if (!alertContainer) {
+                alertContainer = document.createElement('div');
+                alertContainer.id = 'alertContainer';
+                alertContainer.style.position = 'fixed';
+                alertContainer.style.top = '20px';
+                alertContainer.style.right = '20px';
+                alertContainer.style.zIndex = '1050';
+                document.body.appendChild(alertContainer);
+            }
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            alertContainer.appendChild(alertDiv);
+            
+            
+        }
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function() {
+                fetch('/logout', {
+                    method: 'POST'
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = '/login';
+                    } else {
+                        alert('Logout failed. Please try again.');
+                    }
+                }).catch(error => {
+                    console.error('Error during logout:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            });
+        }
+    });
+</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutLinks = document.querySelectorAll('a[href="#logout"], .logout-link, [data-action="logout"]');
+        
+        function handleLogout(e) {
+            e.preventDefault();
+            console.log('Logout clicked');
+            
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                const button = e.target.tagName === 'BUTTON' ? e.target : e.target.closest('button');
+                const originalText = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
+            }
+            
+            fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/login';
+                } else {
+                    throw new Error('Logout failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error during logout:', error);
+                alert('Logout failed. Please try again.');
+                
+                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                    const button = e.target.tagName === 'BUTTON' ? e.target : e.target.closest('button');
+                    button.disabled = false;
+                    button.innerHTML = originalText;
+                }
+            });
+        }
+        
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', handleLogout);
+        }
+        
+        logoutLinks.forEach(link => {
+            link.addEventListener('click', handleLogout);
+        });
+        
+        const dropdowns = document.querySelectorAll('.dropdown-menu');
+        dropdowns.forEach(dropdown => {
+            const logoutItems = dropdown.querySelectorAll('a:contains("Logout"), a:contains("Log out"), a:contains("Sign out")');
+            logoutItems.forEach(item => {
+                item.addEventListener('click', handleLogout);
+            });
+        });
+    });
+</script>
+    <script>
+function viewUser(userId) {
+  fetch(`/api/users/${userId}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+      return response.json();
+    })
+    .then(userData => {
+      const userDetails = `
+        <div class="mb-3">
+          <strong>Name:</strong> ${userData.FirstName} ${userData.MiddleName || ''} ${userData.LastName}
+        </div>
+        <div class="mb-3">
+          <strong>Email:</strong> ${userData.Email}
+        </div>
+        <div class="mb-3">
+          <strong>Phone:</strong> ${userData.PhoneNumber || 'Not provided'}
+        </div>
+        <div class="mb-3">
+          <strong>City:</strong> ${userData.city || 'Not provided'}
+        </div>
+        <div class="mb-3">
+          <strong>Role:</strong> ${userData.role.charAt(0).toUpperCase() + userData.role.slice(1)}
+        </div>
+      `;
+      
+      document.getElementById('userModalTitle').textContent = 'User Details';
+      document.getElementById('userModalBody').innerHTML = userDetails;
+      document.getElementById('userModalFooter').innerHTML = `
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      `;
+      
+      const userModal = new bootstrap.Modal(document.getElementById('userModal'));
+      userModal.show();
+    })
+    .catch(error => {
+      console.error('Error viewing user:', error);
+      alert('Error loading user details. Please try again.');
+    });
+}
+
+function editUser(userId) {
+  fetch(`/api/users/${userId}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+      return response.json();
+    })
+    .then(userData => {
+      const editForm = `
+        <form id="editUserForm">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="firstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="firstName" value="${userData.FirstName || ''}" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="middleName" class="form-label">Middle Name</label>
+              <input type="text" class="form-control" id="middleName" value="${userData.MiddleName || ''}">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="lastName" value="${userData.LastName || ''}" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" value="${userData.Email || ''}" required>
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phone" value="${userData.PhoneNumber || ''}">
+          </div>
+          <div class="mb-3">
+            <label for="city" class="form-label">City</label>
+            <input type="text" class="form-control" id="city" value="${userData.city || ''}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Role</label>
+            <input type="text" class="form-control" value="${userData.role.charAt(0).toUpperCase() + userData.role.slice(1)}" readonly>
+          </div>
+        </form>
+      `;
+      
+      document.getElementById('userModalTitle').textContent = 'Edit User';
+      document.getElementById('userModalBody').innerHTML = editForm;
+      document.getElementById('userModalFooter').innerHTML = `
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="saveUserChanges(${userId})">Save Changes</button>
+      `;
+      
+      const userModal = new bootstrap.Modal(document.getElementById('userModal'));
+      userModal.show();
+    })
+    .catch(error => {
+      console.error('Error editing user:', error);
+      alert('Error loading user data for editing. Please try again.');
+    });
+}
+
+function saveUserChanges(userId) {
+  const firstName = document.getElementById('firstName').value;
+  const middleName = document.getElementById('middleName').value;
+  const lastName = document.getElementById('lastName').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const city = document.getElementById('city').value;
+  
+  if (!firstName || !lastName || !email || !city) {
+    alert('Please fill in all required fields');
+    return;
+  }
+  
+  fetch(`/api/users/${userId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      firstName,
+      middleName,
+      lastName,
+      email,
+      phone,
+      city
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to update user');
+    }
+    return response.json();
+  })
+  .then(() => {
+    const userModal = bootstrap.Modal.getInstance(document.getElementById('userModal'));
+    userModal.hide();
+    
+    alert('User updated successfully');
+    
+    loadUsers(); 
+  })
+  .catch(error => {
+    console.error('Error updating user:', error);
+    alert('Error updating user. Please try again.');
+  });
+}
+
+function deleteUser(userId) {
+  if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+    return;
+  }
+  
+  fetch(`/api/users/${userId}/delete`, {
+    method: 'POST'
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(data => {
+        throw new Error(data.error || 'Failed to delete user');
+      });
+    }
+    return response.json();
+  })
+  .then(() => {
+    alert('User deleted successfully');
+    
+    loadUsers(); 
+  })
+  .catch(error => {
+    console.error('Error deleting user:', error);
+    alert(error.message || 'Error deleting user. Please try again.');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (!document.getElementById('userModal')) {
+    const modalHTML = `
+      <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="userModalTitle">User Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="userModalBody">
+            </div>
+            <div class="modal-footer" id="userModalFooter">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+  }
+});
+
+function renderUserRow(user) {
+  return `
+    <tr>
+      <td>${user.UserID}</td>
+      <td>${user.FirstName} ${user.LastName}</td>
+      <td>${user.Email}</td>
+      <td>${user.Role}</td>
+      <td>
+        <div class="btn-group btn-group-sm" role="group">
+          <button type="button" class="btn btn-info" onclick="viewUser(${user.UserID})" title="View">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button type="button" class="btn btn-warning" onclick="editUser(${user.UserID})" title="Edit">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button type="button" class="btn btn-danger" onclick="deleteUser(${user.UserID})" title="Delete">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+</script>
+<script>
+  async function loadReport(reportType) {
+    document.querySelectorAll('.btn-group .btn').forEach(btn => {
+      btn.classList.remove('active');
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-outline-primary');
+    });
+    
+    const clickedBtn = event.target;
+    clickedBtn.classList.add('active');
+    clickedBtn.classList.remove('btn-outline-primary');
+    clickedBtn.classList.add('btn-primary');
+    
+    document.getElementById('reportContent').innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Loading report...</p></div>';
+    
+    try {
+      const response = await fetch(`/api/admin/reports/${reportType}`);
+      if (!response.ok) {
+        throw new Error(`Failed to load report: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      renderReport(reportType, data);
+    } catch (error) {
+      console.error('Error fetching report:', error);
+      document.getElementById('reportContent').innerHTML = `<div class="alert alert-danger">Error loading report: ${error.message}</div>`;
+    }
+  }
+  
+  function renderReport(reportType, data) {
+    const summaryDiv = document.getElementById('reportSummary');
+    const contentDiv = document.getElementById('reportContent');
+    
+    switch (reportType) {
+      case 'registration-revenue':
+        renderRegistrationRevenueReport(data, summaryDiv, contentDiv);
+        break;
+      case 'sponsorship-funds':
+        renderSponsorshipFundsReport(data, summaryDiv, contentDiv);
+        break;
+      case 'participants-by-event':
+        renderParticipantsByEventReport(data, summaryDiv, contentDiv);
+        break;
+      case 'accommodation':
+        renderAccommodationReport(data, summaryDiv, contentDiv);
+        break;
+      case 'venue-utilization':
+        renderVenueUtilizationReport(data, summaryDiv, contentDiv);
+        break;
+      default:
+        contentDiv.innerHTML = '<div class="alert alert-warning">Unknown report type</div>';
+    }
+  }
+  
+  function renderRegistrationRevenueReport(data, summaryDiv, contentDiv) {
+  summaryDiv.innerHTML = `
+    <div class="row text-center">
+      <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <h5 class="card-title">Total Revenue</h5>
+            <h3>Rs ${(data.summary.totalRevenue || 0).toLocaleString()}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <h5 class="card-title">Participants</h5>
+            <h3>${data.summary.participantCount || 0}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white">
+          <div class="card-body">
+            <h5 class="card-title">Events</h5>
+            <h3>${data.summary.eventCount || 0}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card bg-secondary text-white">
+          <div class="card-body">
+            <h5 class="card-title">Avg Fee/Participant</h5>
+            <h3>Rs ${(data.summary.averageFeePerParticipant || 0).toLocaleString()}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  let tableContent = `
+    <h5 class="mb-3">Revenue by Event</h5>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Registration Fee</th>
+            <th>Participants</th>
+            <th>Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+  
+  data.events.forEach(event => {
+    tableContent += `
+      <tr>
+        <td>${event.EventName || 'Unknown Event'}</td>
+        <td>Rs ${(event.RegistrationFee || 0).toLocaleString()}</td>
+        <td>${event.ParticipantCount || 0}</td>
+        <td>Rs ${(event.Revenue || 0).toLocaleString()}</td>
+      </tr>
+    `;
+  });
+  
+  tableContent += `
+        </tbody>
+      </table>
+    </div>
+  `;
+  
+  contentDiv.innerHTML = tableContent;
+}
+  
+  function renderSponsorshipFundsReport(data, summaryDiv, contentDiv) {
+    summaryDiv.innerHTML = `
+      <div class="row text-center">
+        <div class="col-md-3 mb-3">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <h5 class="card-title">Total Sponsorship</h5>
+              <h3>Rs ${data.summary.totalAmount.toLocaleString()}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card bg-success text-white">
+            <div class="card-body">
+              <h5 class="card-title">Number of Sponsors</h5>
+              <h3>${data.summary.totalSponsors}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card bg-info text-white">
+            <div class="card-body">
+              <h5 class="card-title">Total Sponsorships</h5>
+              <h3>${data.summary.totalSponsorships}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card bg-secondary text-white">
+            <div class="card-body">
+              <h5 class="card-title">Avg per Sponsor</h5>
+              <h3>Rs ${Math.round(data.summary.averageAmountPerSponsor).toLocaleString()}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    let tableContent = `
+      <h5 class="mb-3">Sponsor Contributions</h5>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Sponsor</th>
+              <th>Email</th>
+              <th>Sponsorships</th>
+              <th>Total Amount</th>
+              <th>Last Sponsorship Date</th>
+              <th>Percentage of Total</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    
+    data.sponsors.forEach(sponsor => {
+      const percentage = ((sponsor.TotalAmount / data.summary.totalAmount) * 100).toFixed(1);
+      tableContent += `
+        <tr>
+          <td>${sponsor.FirstName} ${sponsor.LastName}</td>
+          <td>${sponsor.Email}</td>
+          <td>${sponsor.SponsorshipCount}</td>
+          <td>Rs ${sponsor.TotalAmount.toLocaleString()}</td>
+          <td>${new Date(sponsor.LastSponsorshipDate).toLocaleDateString()}</td>
+          <td>${percentage}%</td>
+        </tr>
+      `;
+    });
+    
+    tableContent += `
+          </tbody>
+        </table>
+      </div>
+    `;
+    
+    contentDiv.innerHTML = tableContent;
+  }
+  
+  function renderParticipantsByEventReport(data, summaryDiv, contentDiv) {
+    summaryDiv.innerHTML = `
+      <div class="row text-center">
+        <div class="col-md-4 mb-3">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <h5 class="card-title">Total Participants</h5>
+              <h3>${data.summary.totalParticipants}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="card bg-success text-white">
+            <div class="card-body">
+              <h5 class="card-title">Total Events</h5>
+              <h3>${data.summary.totalEvents}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="card bg-info text-white">
+            <div class="card-body">
+              <h5 class="card-title">Overall Fill Rate</h5>
+              <h3>${data.summary.overallFillRate}%</h3>
+              <p class="mb-0">${data.summary.totalParticipants} / ${data.summary.totalCapacity}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row mt-3">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title">Participants by Category</h6>
+              <div class="table-responsive mt-3">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Participant Count</th>
+                      <th>Percentage of Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+    `;
+    
+    Object.entries(data.summary.categoryCounts).forEach(([category, count]) => {
+      const percentage = ((count / data.summary.totalParticipants) * 100).toFixed(1);
+      summaryDiv.innerHTML += `
+                    <tr>
+                      <td>${category}</td>
+                      <td>${count}</td>
+                      <td>${percentage}%</td>
+                    </tr>
+      `;
+    });
+    
+    summaryDiv.innerHTML += `
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    let tableContent = `
+      <h5 class="mb-3">Events by Participant Count</h5>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Category</th>
+              <th>Participants</th>
+              <th>Capacity</th>
+              <th>Fill Rate</th>
+              <th>Remaining Spots</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    
+    data.events.forEach(event => {
+      const fillRateClass = event.FillRate > 80 ? 'table-success' : 
+                           (event.FillRate > 50 ? 'table-info' : 'table-warning');
+      
+      tableContent += `
+        <tr>
+          <td>${event.EventName}</td>
+          <td>${event.Category}</td>
+          <td>${event.ParticipantCount}</td>
+          <td>${event.MaxParticipants}</td>
+          <td class="${fillRateClass}">${event.FillRate}%</td>
+          <td>${event.RemainingSpots}</td>
+        </tr>
+      `;
+    });
+    
+    tableContent += `
+          </tbody>
+        </table>
+      </div>
+    `;
+    
+    contentDiv.innerHTML = tableContent;
+  }
+  
+  function renderAccommodationReport(data, summaryDiv, contentDiv) {
+  summaryDiv.innerHTML = `
+    <div class="row text-center">
+      <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <h5 class="card-title">Total Accommodations</h5>
+            <h3>${data.summary.totalAccommodations || 0}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <h5 class="card-title">Total Capacity</h5>
+            <h3>${data.summary.totalCapacity || 0}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white">
+          <div class="card-body">
+            <h5 class="card-title">Allocated</h5>
+            <h3>${data.summary.totalAllocated || 0}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card bg-secondary text-white">
+          <div class="card-body">
+            <h5 class="card-title">Overall Utilization</h5>
+            <h3>${data.summary.overallUtilization || 0}%</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  let tableContent = `
+    <h5 class="mb-3">Accommodation Utilization</h5>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Capacity</h>
+            <th>Allocated</th>
+            <th>Utilization</th>
+            <th>Remaining Capacity</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+  
+  if (data.accommodations && data.accommodations.length > 0) {
+    data.accommodations.forEach(accommodation => {
+      const utilizationClass = (accommodation.UtilizationRate || 0) > 80 ? 'table-danger' : 
+                           (accommodation.UtilizationRate || 0) > 50 ? 'table-warning' : 'table-success';
+      
+      tableContent += `
+        <tr>
+          <td>${accommodation.AccommodationID || 'N/A'}</td>
+          <td>${accommodation.Type || 'N/A'}</td>
+          <td>${accommodation.Location || 'N/A'}</td>
+          <td>${accommodation.Capacity || 0}</td>
+          <td>${accommodation.AllocatedCount || 0}</td>
+          <td class="${utilizationClass}">${accommodation.UtilizationRate || 0}%</td>
+          <td>${accommodation.RemainingCapacity || 0}</td>
+        </tr>
+      `;
+    });
+  } else {
+    tableContent += `
+      <tr>
+        <td colspan="7" class="text-center">No accommodation data available</td>
+      </tr>
+    `;
+  }
+  
+  tableContent += `
+        </tbody>
+      </table>
+    </div>
+  `;
+  
+  tableContent += `
+    <h5 class="mt-4 mb-3">Participants by Accommodation</h5>
+    <div class="accordion" id="accommodationParticipants">
+  `;
+  
+  if (data.accommodations && data.accommodations.length > 0) {
+    data.accommodations.forEach((accommodation, index) => {
+      if (accommodation.Participants) {
+        tableContent += `
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                      data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
+                ${accommodation.Type || 'Unknown'} - ${accommodation.Location || 'Unknown'} (${accommodation.AllocatedCount || 0} participants)
+              </button>
+            </h2>
+            <div id="collapse${index}" class="accordion-collapse collapse" data-bs-parent="#accommodationParticipants">
+              <div class="accordion-body">
+                <ul class="list-group">
+                  ${accommodation.Participants.split(', ').map(name => 
+                    `<li class="list-group-item">${name}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        tableContent += `
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                      data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
+                ${accommodation.Type || 'Unknown'} - ${accommodation.Location || 'Unknown'} (No participants)
+              </button>
+            </h2>
+            <div id="collapse${index}" class="accordion-collapse collapse" data-bs-parent="#accommodationParticipants">
+              <div class="accordion-body">
+                <p class="text-muted">No participants assigned to this accommodation</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    });
+  } else {
+    tableContent += `
+      <div class="alert alert-info">No accommodation data available</div>
+    `;
+  }
+  
+  tableContent += `
+    </div>
+  `;
+  
+  contentDiv.innerHTML = tableContent;
+}
+  
+  function renderVenueUtilizationReport(data, summaryDiv, contentDiv) {
+    summaryDiv.innerHTML = `
+      <div class="row text-center">
+        <div class="col-md-3 mb-3">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <h5 class="card-title">Total Venues</h5>
+              <h3>${data.summary.totalVenues}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card bg-success text-white">
+            <div class="card-body">
+              <h5 class="card-title">Total Events</h5>
+              <h3>${data.summary.totalEvents}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card bg-info text-white">
+            <div class="card-body">
+              <h5 class="card-title">Total Hours Booked</h5>
+              <h3>${data.summary.totalHoursBooked}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card bg-secondary text-white">
+            <div class="card-body">
+              <h5 class="card-title">Avg Events/Venue</h5>
+              <h3>${data.summary.averageEventsPerVenue.toFixed(1)}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    let tableContent = `
+      <h5 class="mb-3">Venue Utilization</h5>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Venue</th>
+              <th>Location</th>
+              <th>Capacity</th>
+              <th>Events Hosted</th>
+              <th>Hours Booked</th>
+              <th>Utilization Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    
+    data.venues.forEach(venue => {
+      const utilizationPercentage = data.summary.totalEvents > 0 
+        ? ((venue.EventCount / data.summary.totalEvents) * 100).toFixed(1)
+        : '0';
+        
+      tableContent += `
+        <tr>
+          <td>${venue.VenueName}</td>
+          <td>${venue.Location}</td>
+          <td>${venue.Capacity}</td>
+          <td>${venue.EventCount}</td>
+          <td>${venue.TotalHoursBooked}</td>
+          <td>${utilizationPercentage}%</td>
+        </tr>
+      `;
+    });
+    
+    tableContent += `
+          </tbody>
+        </table>
+      </div>
+    `;
+    
+    tableContent += `
+      <h5 class="mt-4 mb-3">Events by Venue</h5>
+      <div class="accordion" id="venueEvents">
+    `;
+    
+    data.venues.forEach((venue, index) => {
+      if (venue.Events) {
+        tableContent += `
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                      data-bs-target="#venueCollapse${index}" aria-expanded="false" aria-controls="venueCollapse${index}">
+                ${venue.VenueName} - ${venue.EventCount} events
+              </button>
+            </h2>
+            <div id="venueCollapse${index}" class="accordion-collapse collapse" data-bs-parent="#venueEvents">
+              <div class="accordion-body">
+                <ul class="list-group">
+                  ${venue.Events.split(', ').map(event => 
+                    `<li class="list-group-item">${event}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        tableContent += `
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                      data-bs-target="#venueCollapse${index}" aria-expanded="false" aria-controls="venueCollapse${index}">
+                ${venue.VenueName} - No events
+              </button>
+            </h2>
+            <div id="venueCollapse${index}" class="accordion-collapse collapse" data-bs-parent="#venueEvents">
+              <div class="accordion-body">
+                <p class="text-muted">No events scheduled at this venue</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    });
+    
+    tableContent += `
+      </div>
+    `;
+    
+    contentDiv.innerHTML = tableContent;
+  }
+</script>
+
+</body>
+</html>

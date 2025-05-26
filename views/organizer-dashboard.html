@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Dashboard - NASCON Event Management System</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-calendar-alt me-2"></i>NASCON Events
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/organizer">Dashboard</a>
+                    </li>
+                </ul>
+                <div class="d-flex" id="userMenu">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- main Content -->
+    <div class="container py-4 page-content">
+        <!-- Organizer Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h2 class="mb-0">Organizer Dashboard</h2>
+                                <p class="mb-0">Welcome, <span id="organizerName">Organizer</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alertContainer"></div>
+
+        <!-- Dashboard Stats -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-check dashboard-icon text-warning"></i>
+                        <h4 class="card-title">Your Events</h4>
+                        <p class="card-text display-6" id="totalEvents">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users dashboard-icon text-info"></i>
+                        <h4 class="card-title">Total Participants</h4>
+                        <p class="card-text display-6" id="totalParticipants">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-star dashboard-icon text-success"></i>
+                        <h4 class="card-title">Experience Level</h4>
+                        <p class="card-text display-6" id="experienceLevel">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your Events -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Your Events</h3>
+                    <div class="d-flex gap-2">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="eventSearch" placeholder="Search events...">
+                            <button class="btn btn-outline-secondary" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Event Name</th>
+                                <th>Category</th>
+                                <th>Date & Time</th>
+                                <th>Venue</th>
+                                <th>Participants</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventsTableBody">
+                            <!-- Events will be loaded dynamically -->
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participants in Your Event -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Participants in Your Event</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Participant Name</th>
+                                <th>Email</th>
+                                <th>Registration Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="participantsTableBody">
+                            <!-- Participants will be loaded dynamically -->
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="small mb-0">&copy; 2023 NASCON Event Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/js/main.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script>
+        let currentEvents = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            try {
+                console.log("user id is:111 ");
+
+                fetch('/getlastuser')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch user data');
+                        }
+                        return response.json();
+                    })
+                    .then(userData => {
+                        const user = userData;
+                        
+                        console.log("user role is:111 ", user.role);
+                        console.log("user id is:111 ", user.id);
+                        fetch('/getrole', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ id: user.id })
+                        })
+                        .then(roleResponse => {
+                            if (!roleResponse.ok) {
+                                throw new Error('Failed to fetch user role');
+                            }
+                            return roleResponse.json();
+                        })
+                        .then(roleData => {
+                            user.role = roleData.role;
+                            console.log("user role is:111 ", user.role);
+                            
+                            if (!user) {
+                                window.location.href = '/login';
+                                return;
+                            }
+                            
+                            if (user.role !== 'organizer') {
+                                showAlert('Access denied. You are not registered as an organizer.');
+                                window.location.href = '/login';
+                                return;
+                            }
+                            
+                            document.getElementById('userMenu').innerHTML = createUserMenu(user);
+                            document.getElementById('organizerName').textContent = user.name || user.id;
+                            
+                            loadOrganizerEvents(user);
+                            loadEventParticipants();
+                        })
+                        .catch(roleError => {
+                            console.error('Error fetching user role:', roleError);
+                            showAlert('Error loading user role. Please refresh and try again.', 'danger');
+                            window.location.href = '/login';
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching user:', error);
+                        window.location.href = '/login';
+                    });
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+                showAlert('Failed to load dashboard. Please try again later.');
+            }
+        });
+        
+        function createUserMenu(user) {
+            return `
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-tie me-1"></i> ${user.name}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/organizer">Dashboard</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+                    </ul>
+                </div>
+            `;
+        }
+        
+        function loadOrganizerEvents(user) {
+           
+                    const organizerId = user.id;
+                    
+                    fetch('/geteventbyorganizerid', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ organizerId: organizerId })
+                    })
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch events');
+                        }
+                        return response.json();
+                    })
+                    .then(function(events) {
+                        currentEvents = events;
+                        renderEventsTable(currentEvents);
+                        if (events.length > 0) {
+                            loadEventParticipants(events[0].EventID);
+                        } else {
+                            // Clear participants table if no events found
+                            document.getElementById('participantsTableBody').innerHTML = `
+                                <tr>
+                                    <td colspan="5" class="text-center">
+                                        No participants found. Create an event first.
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                    })
+                .catch(function(error) {
+                    console.error('Error loading events:', error);
+                    document.getElementById('eventsTableBody').innerHTML = `
+                        <tr>
+                            <td colspan="7" class="text-center text-danger">
+                                Failed to load events. Please try again later.
+                            </td>
+                        </tr>
+                    `;
+                });
+        }
+        
+        function renderEventsTable(events) {
+            const tableBody = document.getElementById('eventsTableBody');
+            
+            if (!events || events.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center">
+                            No events found. <a href="/event/create">Create your first event</a>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let tableContent = '';
+            for (let i = 0; i < events.length; i++) {
+                const event = events[i];
+                const eventDate = new Date(event.DateTime);
+                const now = new Date();
+                let status = 'Upcoming';
+                let statusClass = 'bg-info text-dark';
+                
+                if (eventDate < now) {
+                    status = 'Completed';
+                    statusClass = 'bg-success';
+                } else if (eventDate.toDateString() === now.toDateString()) {
+                    status = 'Today';
+                    statusClass = 'bg-warning text-dark';
+                }
+                
+                tableContent += `
+                    <tr data-event-id="${event.EventID}" onclick="selectEvent(${event.EventID}, '${event.EventName}')">
+                        <td>${event.EventName}</td>
+                        <td>
+                            <span class="badge ${getEventBadgeClass(event.Category)}">
+                                ${event.Category}
+                            </span>
+                        </td>
+                        <td>${event.DateTime}</td>
+                        <td>${event.VenueName || 'Not assigned'}</td>
+                        <td>${event.RegisteredParticipants || 0}/${event.MaxParticipants}</td>
+                        <td><span class="badge ${statusClass}">${status}</span></td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="/event/${event.EventID}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="/eventedit/${event.EventID}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+            tableBody.innerHTML = tableContent;
+        }
+        
+        function loadVenues() {
+            fetch('/api/events/venues/all')
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch venues');
+                    }
+                    return response.json();
+                })
+                .then(function(venues) {
+                    allVenues = venues;
+                    renderVenuesTable(allVenues);
+                })
+                .catch(function(error) {
+                    console.error('Error loading venues:', error);
+                    document.getElementById('venuesTableBody').innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center text-danger">
+                                Failed to load venues. Please try again later.
+                            </td>
+                        </tr>
+                    `;
+                });
+        }
+        
+        function renderVenuesTable(venues) {
+            const tableBody = document.getElementById('venuesTableBody');
+            
+            if (!venues || venues.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            No venues available.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let tableContent = '';
+            for (let i = 0; i < venues.length; i++) {
+                const venue = venues[i];
+                const statusClass = venue.Status === 'Available' ? 'bg-success' : 'bg-danger';
+                
+                tableContent += `
+                    <tr>
+                        <td>${venue.VenueName}</td>
+                        <td>${venue.Location}</td>
+                        <td>${venue.Capacity}</td>
+                        <td><span class="badge ${statusClass}">${venue.Status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#venueDetailsModal">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }
+            tableBody.innerHTML = tableContent;
+        }
+        
+        function updateEventStats(events) {
+            document.getElementById('totalEvents').textContent = events.length;
+            
+            let totalParticipants = 0;
+            for (let i = 0; i < events.length; i++) {
+                totalParticipants += parseInt(events[i].RegisteredParticipants || 0);
+            }
+            
+            document.getElementById('totalParticipants').textContent = totalParticipants;
+        }
+        
+        function loadOrganizerProfile() {
+            fetch('/api/users/profile/me')
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch profile');
+                    }
+                    return response.json();
+                })
+                .then(function(profile) {
+                    document.getElementById('experienceLevel').textContent = profile.Experience || '0';
+                })
+                .catch(function(error) {
+                    console.error('Error loading profile:', error);
+                });
+        }
+        
+        function setupSearch() {
+            const eventSearch = document.getElementById('eventSearch');
+            
+            eventSearch.addEventListener('input', function() {
+                const searchTerm = eventSearch.value.toLowerCase();
+                const filteredEvents = [];
+                
+                for (let i = 0; i < currentEvents.length; i++) {
+                    const event = currentEvents[i];
+                    if (
+                        event.EventName.toLowerCase().includes(searchTerm) ||
+                        event.Category.toLowerCase().includes(searchTerm) ||
+                        (event.VenueName && event.VenueName.toLowerCase().includes(searchTerm))
+                    ) {
+                        filteredEvents.push(event);
+                    }
+                }
+                
+                renderEventsTable(filteredEvents);
+            });
+        }
+
+        function loadEventParticipants(eventId) {
+            if (!eventId) {
+                document.getElementById('participantsTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            No event selected. Please select an event to view participants.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            fetch('/getparticipantsbyevent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ eventId: eventId })
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch participants');
+                }
+                return response.json();
+            })
+            .then(function(participants) {
+                renderParticipantsTable(participants);
+            })
+            .catch(function(error) {
+                console.error('Error loading participants:', error);
+                document.getElementById('participantsTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center text-danger">
+                            Failed to load participants. Please try again later.
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderParticipantsTable(participants) {
+            const tableBody = document.getElementById('participantsTableBody');
+            
+            if (!participants || participants.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            No participants found.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let tableContent = '';
+            for (let i = 0; i < participants.length; i++) {
+                const participant = participants[i];
+                const fullName = [
+                    participant.FirstName || '',
+                    participant.MiddleName || '',
+                    participant.LastName || ''
+                ].filter(Boolean).join(' ');
+                
+                const status = participant.Status || 'Registered';
+                const statusClass = status === 'Confirmed' ? 'bg-success' : 'bg-warning text-dark';
+                
+                tableContent += `
+                    <tr>
+                        <td>${fullName}</td>
+                        <td>${participant.Email || 'No email provided'}</td>
+                        <td>${participant.RegistrationDate ? formatDate(participant.RegistrationDate) : 'N/A'}</td>
+                        <td><span class="badge ${statusClass}">${status}</span></td>
+                        
+                    </tr>
+                `;
+            }
+            tableBody.innerHTML = tableContent;
+        }
+
+        function selectEvent(eventId, eventName) {
+            const rows = document.querySelectorAll('#eventsTableBody tr');
+            rows.forEach(row => {
+                row.classList.remove('table-active');
+                if (row.getAttribute('data-event-id') == eventId) {
+                    row.classList.add('table-active');
+                }
+            });
+            
+            document.querySelector('.card:last-child .card-header h3').textContent = 
+                `Participants in "${eventName}"`;
+            
+            loadEventParticipants(eventId);
+        }
+        
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString; 
+            
+            return date.toLocaleString('en-US', {
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function getEventBadgeClass(category) {
+            const categoryMap = {
+                'Sports': 'bg-success',
+                'Academic': 'bg-primary',
+                'Cultural': 'bg-danger',
+                'Technical': 'bg-info text-dark',
+                'Workshop': 'bg-warning text-dark',
+                'Concert': 'bg-purple',
+                'Seminar': 'bg-secondary'
+            };
+            
+            return categoryMap[category] || 'bg-secondary';
+        }
+        
+       
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function() {
+                fetch('/logout', {
+                    method: 'POST'
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = '/login';
+                    } else {
+                        alert('Logout failed. Please try again.');
+                    }
+                }).catch(error => {
+                    console.error('Error during logout:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            });
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            const logoutLinks = document.querySelectorAll('a[href="#logout"], .logout-link, [data-action="logout"]');
+            
+            function handleLogout(e) {
+                e.preventDefault();
+                console.log('Logout clicked from organizer dashboard');
+                
+                fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    console.log('Logout response:', response);
+                    if (response.ok) {
+                        window.location.href = '/login';
+                    } else {
+                        throw new Error('Logout failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during logout:', error);
+                    alert('Logout failed. Please try again.');
+                });
+            }
+            
+            if (logoutBtn) {
+                console.log('Attaching event listener to logout button');
+                logoutBtn.addEventListener('click', handleLogout);
+            }
+            
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', handleLogout);
+            });
+            
+            document.querySelectorAll('.dropdown-menu a').forEach(item => {
+                if (item.textContent.includes('Logout') || 
+                    item.textContent.includes('Log out') || 
+                    item.textContent.includes('Sign out')) {
+                    item.addEventListener('click', handleLogout);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details - Judge Portal</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/judge">
+                <i class="fas fa-gavel me-2"></i>NASCON Judge Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/judge">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/judge/events">My Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/judge/scoring">Scoring</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i><span id="username">Judge</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/judge/profile"><i class="fas fa-id-card me-2"></i>Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4 page-content">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/judge">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="/judge/events">My Events</a></li>
+                        <li class="breadcrumb-item active" id="eventBreadcrumb">Event Details</li>
+                    </ol>
+                </nav>
+                <h1 id="eventName" class="display-5 mb-2">Loading event details...</h1>
+                <div class="mb-3">
+                    <span id="eventCategory" class="badge bg-primary me-2">Category</span>
+                    <span class="text-muted" id="eventDateTime"><i class="far fa-calendar-alt me-1"></i>Date and Time</span>
+                </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
+                <a href="#" id="goBackBtn" class="btn btn-secondary me-2">
+                    <i class="fas fa-arrow-left me-1"></i>Back
+                </a>
+                <a href="#" id="scoreEventBtn" class="btn btn-primary">
+                    <i class="fas fa-clipboard-list me-1"></i>Score Event
+                </a>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Event Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6 class="text-muted mb-2">Description</h6>
+                            <p id="eventDescription">Loading...</p>
+                        </div>
+                        
+                        <div class="mb-0">
+                            <h6 class="text-muted mb-2">Rules</h6>
+                            <p id="eventRules">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Participants</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Score Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="participantsTable">
+                                    <tr>
+                                        <td colspan="3" class="text-center">Loading participants...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Venue</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 id="venueName" class="mb-2">Loading venue...</h6>
+                        <p id="venueLocation" class="mb-0"><i class="fas fa-map-pin me-1"></i>Loading location...</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-clipboard-check me-2"></i>Judging Status</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6 class="text-muted mb-2">Evaluation Progress</h6>
+                            <div class="progress">
+                                <div id="evaluationProgress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-0">
+                            <h6 class="text-muted mb-2">Status</h6>
+                            <p id="judgingStatus" class="mb-0"><span class="badge bg-warning">Pending</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="small mb-0">&copy; 2023 NASCON Event Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        let eventId = null;
+        let eventData = null;
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const userResponse = await fetch('/getlastuser');
+                if (!userResponse.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                
+                const userData = await userResponse.json();
+                document.getElementById('username').textContent = userData.name;
+                
+                const pathParts = window.location.pathname.split('/');
+                eventId = pathParts[pathParts.length - 1];
+                
+                const goBackBtn = document.getElementById('goBackBtn');
+                goBackBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    history.back();
+                });
+                
+                const scoreEventBtn = document.getElementById('scoreEventBtn');
+                scoreEventBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.href = `/judge/scoring/${eventId}`;
+                });
+                
+                await loadEventDetails();
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                alert('Failed to load the page. Please try again later.');
+            }
+        });
+        
+        async function loadEventDetails() {
+            try {
+                const response = await fetch(`/api/judge/events/${eventId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch event details');
+                }
+                
+                eventData = await response.json();
+                
+                document.title = `${eventData.EventName} - Judge Portal`;
+                
+                document.getElementById('eventBreadcrumb').textContent = eventData.EventName;
+                document.getElementById('eventName').textContent = eventData.EventName;
+                document.getElementById('eventCategory').textContent = eventData.Category;
+                
+                const eventDate = new Date(eventData.EventDateTime);
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                document.getElementById('eventDateTime').innerHTML = 
+                    `<i class="far fa-calendar-alt me-1"></i>${eventDate.toLocaleDateString('en-US', options)}`;
+                
+                document.getElementById('eventDescription').textContent = eventData.Description || 'No description provided.';
+                document.getElementById('eventRules').textContent = eventData.Rules || 'No rules specified.';
+                document.getElementById('venueName').textContent = eventData.VenueName;
+                document.getElementById('venueLocation').innerHTML = 
+                    `<i class="fas fa-map-pin me-1"></i>${eventData.Location || 'Location not specified'}`;
+                
+                const participantsTable = document.getElementById('participantsTable');
+                if (eventData.participants && eventData.participants.length > 0) {
+                    participantsTable.innerHTML = '';
+                    
+                    let scoredCount = 0;
+                    
+                    eventData.participants.forEach(participant => {
+                        const isScored = participant.Score !== null;
+                        if (isScored) scoredCount++;
+                        
+                        participantsTable.innerHTML += `
+                            <tr>
+                                <td>${participant.FirstName} ${participant.LastName}</td>
+                                <td>
+                                    <span class="badge ${isScored ? 'bg-success' : 'bg-warning'}">
+                                        ${isScored ? 'Scored' : 'Not Scored'}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="/judge/scoring/${eventId}?participant=${participant.ParticipantID}" class="btn btn-sm ${isScored ? 'btn-secondary' : 'btn-primary'}">
+                                        <i class="fas fa-${isScored ? 'eye' : 'clipboard-list'} me-1"></i>${isScored ? 'View Score' : 'Score'}
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    
+                    const progressPercentage = Math.round((scoredCount / eventData.participants.length) * 100);
+                    const progressBar = document.getElementById('evaluationProgress');
+                    progressBar.style.width = `${progressPercentage}%`;
+                    progressBar.textContent = `${progressPercentage}%`;
+                    progressBar.setAttribute('aria-valuenow', progressPercentage);
+                    
+                    const judgingStatus = document.getElementById('judgingStatus');
+                    if (progressPercentage === 100) {
+                        judgingStatus.innerHTML = '<span class="badge bg-success">Completed</span>';
+                    } else if (progressPercentage > 0) {
+                        judgingStatus.innerHTML = '<span class="badge bg-info">In Progress</span>';
+                    } else {
+                        judgingStatus.innerHTML = '<span class="badge bg-warning">Not Started</span>';
+                    }
+                    
+                } else {
+                    participantsTable.innerHTML = '<tr><td colspan="3" class="text-center">No participants registered for this event.</td></tr>';
+                    
+                    document.getElementById('evaluationProgress').style.width = '0%';
+                    document.getElementById('evaluationProgress').textContent = '0%';
+                    document.getElementById('judgingStatus').innerHTML = '<span class="badge bg-secondary">No Participants</span>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading event details:', error);
+                alert('Failed to load event details. Please try again later.');
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    fetch('/logout', {
+                        method: 'POST'
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/login';
+                        } else {
+                            alert('Logout failed. Please try again.');
+                        }
+                    }).catch(error => {
+                        console.error('Error during logout:', error);
+                        alert('An error occurred. Please try again.');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
